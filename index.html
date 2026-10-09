@@ -96,7 +96,7 @@ select.txt{appearance:auto}
 #topbtn button{white-space:nowrap;background:rgba(5,28,41,.6);color:var(--ink);border:1px solid rgba(234,244,247,.25);border-radius:4px;padding:6px 10px;font:600 12px var(--f-body);cursor:pointer}
 #touch .arrow{font-size:36px;line-height:1;width:62px!important;height:62px!important;flex:0 0 auto}
 @media (min-width:561px){ #touch{left:50%;right:auto;transform:translateX(-50%);width:min(520px,100vw);gap:10px} }
-#touch .acts{flex:1 1 auto;display:flex;flex-wrap:wrap;justify-content:center;align-items:flex-end;gap:6px;min-width:0}
+#touch .acts{flex:1 1 auto;display:flex;flex-wrap:nowrap;justify-content:center;align-items:flex-end;gap:6px;min-width:0}
 @media (max-width:560px){
   #touch{padding:0 8px calc(8px + env(safe-area-inset-bottom,0px));gap:6px}
   #touch .arrow{width:56px!important;height:56px!important;font-size:32px}
@@ -113,7 +113,7 @@ select.txt{appearance:auto}
   .go{padding:11px 14px;font-size:19px}
   #skinPrev,#skinPrev2{max-height:150px}
 }
-@media (max-width:340px){ #touch button.tack{height:30px;font-size:12px;padding:0 8px} #touch button.luff{height:26px;font-size:10px;padding:0 6px} #touch .arrow{width:50px!important;height:50px!important} }
+@media (max-width:420px){ #touch .acts{gap:3px} #touch button.tack{height:32px;font-size:11px;padding:0 7px;letter-spacing:.02em} #touch button.luff{height:28px;font-size:10px;padding:0 6px} #touch .arrow{width:48px!important;height:48px!important;font-size:28px} }
 @media (max-height:560px){ .card>.m-hide{display:none} #skinPrev,#skinPrev2{max-height:120px} }
 </style>
 
@@ -221,7 +221,7 @@ select.txt{appearance:auto}
       <li><b>R13</b>A boat that is tacking (past head to wind until close-hauled) keeps clear.</li>
       <li><b>R18</b>In the zone (3 boat lengths) the inside boat gets mark-room. Does not apply at the windward mark between boats on opposite tacks.</li>
       <li><b>R29</b>A boat over the line at the starting signal must return and start again.</li>
-      <li><b>R31</b>Touching a mark gives the 5-second penalty.</li>
+      <li><b>R31</b>Touching the next mark, the start buoy or the committee boat gives the 5-second penalty.</li>
       <li><b>R15</b>A boat that acquires right of way (e.g. right after a tack) must initially give the other boat room to keep clear.</li>
       <li><b>R18.2b</b>The boat that reaches the zone clear ahead gets mark-room.</li>
       <li><b>R18.3</b>A boat that tacks inside the zone at the windward mark gets no mark-room and keeps clear.</li>
@@ -663,7 +663,7 @@ function newRace(opt){
   const puffs=[];
   for(let i=0;i<48;i++) puffs.push({i,k:0,x:-1300+R()*2600,y:-3600+R()*4200,r:140+R()*240,s:0.25+R()*0.35,veer:(R()-0.5)*24});
   const boats=[];
-  const skill=[1.28,1.40,1.50][opt.d];   // Club · National · Worlds (all levels hard: National nearly Worlds, Club a little easier) (WM boats are faster than a perfectly sailed own boat)
+  const skill=1;   // all levels: computer boats are exactly as fast as your boat; the levels differ only in tactics
   const myX=-180+Math.random()*360;
   const team=!!opt.team, myTeam=team?(opt.myTeam|0):-1;
   boats.push(makeBoat({me:true,flag:myFlag||null,gear:Object.assign({},myGear),sailNo:mySailNo||null,skin:team?null:mySkin,name:opt.nick||'You',color:team?TEAMC[myTeam]:SKINS[mySkin].hull,team:myTeam,x:myX,y:300+Math.random()*30,h:Math.random()<0.5?80:-80}));
@@ -674,11 +674,11 @@ function newRace(opt){
     const n=botTeams.length, hx=-200+400*(i+0.5)/n+(R()-0.5)*40;
     const nm=team?(TEAMN[tm]+' '+(++cnt[tm]+(tm===myTeam&&!opt.teamBots?1:0))):NAMES[i%NAMES.length];
     boats.push(makeBoat({name:nm+(opt.online?' (KI)':''),color:team?TEAMC[tm]:COLORS[i%8],team:tm,x:hx,y:150+R()*120,h:R()<0.5?70:-70,
-      skill:skill*(opt.d>=1?0.985+R()*0.02:0.97+R()*0.05),smart:[2.4,3.1,3.5][opt.d]*(opt.d>=1?0.95+R()*0.1:0.85+R()*0.3),side:R()<0.5?1:-1,hold:{x:hx,y:110+R()*70},aimX:(R()-0.5)*120,fx:(R()-0.5)*260}));
+      skill,smart:[2.2,3.4,4.6][opt.d]*(0.95+R()*0.1),side:R()<0.5?1:-1,hold:{x:hx,y:110+R()*70},aimX:(R()-0.5)*120,fx:(R()-0.5)*260}));
   });
   ZONE=(team?2:3)*BL;
   freeRot=null;
-  S={team, myTeam,seedOff:(opt.seed%997)/7, wHist:[], t:-COUNTDOWN, boats, remote:new Map(), puffs, wbase:(R()-0.5)*10, ph1:R()*6, ph2:R()*6, msgs:[], finishers:[], endAt:null, R:rng(opt.seed^0x5f3759df), cam:{x:myX,y:150}, gun:false, contacts:new Map(), online:!!opt.online, lvl:[1,2,2][opt.d|0]}; for(const b of boats) b.spawn={x:b.x,y:b.y,h:b.h,v:b.v}; for(const id of ['bLuff','tS']){ const e=document.getElementById(id); if(e){ e.textContent='Luff'; e.style.background=''; e.style.color=''; } }
+  S={team, myTeam,seedOff:(opt.seed%997)/7, wHist:[], t:-COUNTDOWN, boats, remote:new Map(), puffs, wbase:(R()-0.5)*10, ph1:R()*6, ph2:R()*6, msgs:[], finishers:[], endAt:null, R:rng(opt.seed^0x5f3759df), cam:{x:myX,y:150}, gun:false, contacts:new Map(), online:!!opt.online, lvl:[1,2,2][opt.d|0], tac:opt.d|0}; for(const b of boats) b.spawn={x:b.x,y:b.y,h:b.h,v:b.v}; for(const id of ['bLuff','tS']){ const e=document.getElementById(id); if(e){ e.textContent='Luff'; e.style.background=''; e.style.color=''; } }
   say(opt.online?'Entry open · 1 minute':'2 minutes to start · racing rules apply',3);
 }
 const allBoats=()=>S.remote.size?S.boats.concat([...S.remote.values()]):S.boats;
@@ -765,8 +765,11 @@ function targetOf(b){
     if(Math.hypot(b.x-WM.x,b.y-WM.y)<130&&b.x<WM.x+28&&b.y>WM.y-12) return {x:WM.x+48,y:WM.y+26};   // close in on the wrong side: first get to the east of the mark
     return {x:WM.x+50+Math.abs(b.aimX)*0.03,y:WM.y-42};    // approach on the east side, just above the mark
   }
-  if(isGate(b.leg)){ const sd=b.aimX<0?-1:1; return {x:sd*(G2.x-30),y:LM.y+45}; }   // pass through close to one gate mark
-  return {x:clamp(b.fx,-95,95),y:FA.y+60};
+  if(isGate(b.leg)){ const sd=b.aimX<0?-1:1; if(b.y>LM.y-15) b.gUp=true; else if(b.y<LM.y-60) b.gUp=false;   // missed the gate: first back up above it, then through
+    return b.gUp?{x:sd*(G2.x-30),y:LM.y-80}:{x:sd*(G2.x-30),y:LM.y+45}; }   // pass through close to one gate mark
+  // finish: the line has to be crossed from the course side; a boat that is below it first sails back up above the line
+  if(b.y>FA.y-20) b.fUp=true; else if(b.y<FA.y-55) b.fUp=false;
+  return b.fUp?{x:clamp(b.fx,-95,95),y:FA.y-75}:{x:clamp(b.fx,-95,95),y:FA.y+60};
 }
 function aiDesired(b,w){
   const tl=-S.t;
@@ -776,11 +779,11 @@ function aiDesired(b,w){
     const appr=b.y/(VMAX*0.5)+[4,3,2.5][S.lvl||0];
     if(tl>appr){
       const dx=b.hold.x-b.x, dy=b.hold.y-b.y;
-      if(dx*dx+dy*dy<45*45) return w.dir+b.side*40;
+      if(dx*dx+dy*dy<45*45){ if((b.x-b.hold.x)*Math.sign(Math.sin((w.dir+b.side*85)*D2R))>30) b.side=-b.side; return w.dir+b.side*85; }   // wait near the line on a beam reach (never head to wind, so no drifting back)
       return brg(b.x,b.y,b.hold.x,b.hold.y);
     }
     // final approach: ease the sail (luff) when arriving too early, sheet in to hit the line at the gun
-    if(S.lvl>=1&&!b.me&&!b.remote){ const vf=VMAX*0.55*b.skill; b.luff=b.y>2&&b.y<vf*tl*0.92-6; } 
+    if(S.lvl>=1&&!b.me&&!b.remote){ const vf=VMAX*0.55*b.skill; b.luff=b.y>2&&b.y<70&&b.y<vf*tl*0.92-6; }   // only luff close to the line (otherwise the boat would drift away backwards) 
     if(b.y<26&&tl>0) return w.dir+b.side*(S.lvl>=1?chE(w):20);
     return w.dir+b.side*chE(w);
   }
@@ -797,7 +800,9 @@ function aiDesired(b,w){
     if(off>UA+7&&b.cool<0&&S.R()<b.smart*0.04) want=true;
     // play the shifts: tack onto the lifted tack when it points clearly closer to the mark (stronger bots do this more often)
     { const cur=Math.abs(norm(w.dir+b.side*UA-bt)), oth=Math.abs(norm(w.dir-b.side*UA-bt)); if(cur-oth>14-b.smart*4&&b.cool<0&&S.R()<b.smart*0.05) want=true; }
-    if(Math.abs(b.x)>720&&Math.sign(b.x)===Math.sign(Math.sin((w.dir+b.side*UA)*D2R))) want=true;
+    // National / Worlds: get out of dirty air quickly
+    if(S.tac>=1&&b.cool<0&&b.shade<[1,0.8,0.88][S.tac]&&S.R()<b.smart*0.08) want=true;
+    if(Math.abs(b.x)>720&&Math.sign(b.x)===Math.sign(Math.sin((w.dir+b.side*UA)*D2R))) { want=true; b.cool=-1; }   // never sail on towards the shore
     if(want&&b.cool<0){b.side=-b.side;b.cool=(S.lvl===2?3:5)+S.R()*4;}
     return w.dir+b.side*UA;
   }
@@ -805,13 +810,24 @@ function aiDesired(b,w){
     const DA=bestVMGangle(w,false), h1=w.dir+DA, h2=w.dir-DA;
     if(!b.dside) b.dside=Math.abs(norm(h1-bt))<Math.abs(norm(h2-bt))?1:-1;
     const cur=Math.abs(norm(w.dir+b.dside*DA-bt)), oth=Math.abs(norm(w.dir-b.dside*DA-bt));
-    if(cur-oth>18&&b.cool<0){ b.dside=-b.dside; b.cool=3+S.R()*2; }
+    let gy=cur-oth>18;
+    if(S.tac>=1&&b.cool<0&&Math.hypot(T.x-b.x,T.y-b.y)>[0,280,460][S.tac]){ const L=[0,280,460][S.tac], sc=sd=>{ let v=0; for(const f of [0.5,1]){ const hd=(w.dir+sd*DA)*D2R, w2=windAt(b.x+Math.sin(hd)*L*f,b.y-Math.cos(hd)*L*f); v+=(0.3+0.7*w2.spd)*Math.cos(norm(w2.dir+sd*DA-bt)*D2R); } return v; }; gy=sc(-b.dside)-sc(b.dside)>[0,0.18,0.1][S.tac]; }
+    if(Math.abs(b.x)>650&&Math.sign(b.x)===Math.sign(Math.sin((w.dir+b.dside*DA)*D2R))) { gy=true; b.cool=-1; }   // never run out towards the shore
+    if(gy&&b.cool<0){ b.dside=-b.dside; b.cool=3+S.R()*2; }
     if(Math.abs(rel)>=DA-4) return w.dir+b.dside*DA;
   }
   if(Math.abs(rel)>168) return w.dir+180+(Math.sign(rel)||1)*12;
   return bt;
 }
 function aiSteer(b,w){
+  // stuck (e.g. against the shore or a mark): sail back towards the middle of the course for a few seconds
+  if(S.gun&&!b.done){ b.slowT=(b.v<VMAX*0.06)?(b.slowT||0)+1/60:0; if(b.slowT>4||Math.abs(b.x)>880){ if(!(b.rescue>S.t)) b.rescue=S.t+6; b.slowT=0; } }
+  if(b.rescue>S.t){ let best=null, bs=-1e9;   // pick a sailable heading that leads away from the shore and back towards the course
+    for(let a=0;a<360;a+=15){ const tw=Math.abs(norm(a-w.dir)); if(tw<55) continue; const px=b.x+Math.sin(a*D2R)*45, py=b.y-Math.cos(a*D2R)*45; if(!LAKE.water(px,py)) continue;
+      const sc=LAKE.dist(px,py)-Math.hypot(px,py-clamp(b.y,WM.y+300,0))*0.15; if(sc>bs){bs=sc;best=a;} }
+    if(best!=null&&Math.abs(b.x)<880) return best;
+    const dx=-b.x, dy=clamp(b.y,WM.y+300,0)-b.y, dl=Math.hypot(dx,dy)||1; for(let k=1;k<=40;k++){ const nx=b.x+dx/dl*k*3, ny=b.y+dy/dl*k*3; if(LAKE.water(nx,ny)){ b.x+=(nx-b.x)*0.1+dx/dl*1.5; b.y+=(ny-b.y)*0.1+dy/dl*1.5; break; } }
+    if(best!=null) return best; return brg(b.x,b.y,0,clamp(b.y,WM.y+300,0)); }
   let d=aiDesired(b,w);
   if(!rulesOn()) return d;
   // team racing: cover the nearest opponent behind on the beat (sail the same tack, sit on its wind)
@@ -836,6 +852,8 @@ function aiSteer(b,w){
   // don't touch marks or the committee boat
   for(const m of [WM,G1,G2,PIN,CB,FA,FB]){ const r=m===CB?44:26, dd=Math.hypot(m.x-b.x,m.y-b.y); if(dd>r+50) continue;
     const relM=norm(brg(b.x,b.y,m.x,m.y)-b.h), lim=dd<r+18?80:45; if(Math.abs(relM)<lim){ d=b.h-(Math.sign(relM)||1)*45; break; } }
+  // never stay head to wind (in irons the boat would drift backwards): bear away onto the nearer tack
+  if(!b.luff&&Math.abs(norm(d-w.dir))<38&&Math.abs(norm(b.h-w.dir))<38){ const sd=Math.sign(norm(b.h-w.dir))||b.side; d=w.dir+sd*55; }
   return d;
 }
 
@@ -866,7 +884,7 @@ function step(dt){
       const [ux,uy]=b._sv, rx=a.x-b.x, ry=a.y-b.y, along=rx*ux+ry*uy;
       if(along>8&&along<260){   // wind shadow: up to ~9 boat lengths downwind, clearly slower inside it, several shadows add up
         const perp=Math.abs(rx*uy-ry*ux), half=15+along*0.07;
-        if(perp<half){ const k=Math.pow(1-along/260,0.7)*(1-0.45*perp/half); a.shade=Math.max(0.45,a.shade*(1-0.42*k*(!a.me&&!a.remote&&S.lvl===2?0.7:1))); a.dirt=Math.max(a.dirt,k); }
+        if(perp<half){ const k=Math.pow(1-along/260,0.7)*(1-0.45*perp/half); a.shade=Math.max(0.45,a.shade*(1-0.42*k)); a.dirt=Math.max(a.dirt,k); }
         else if(perp<half*1.8){ a.dirt=Math.max(a.dirt,0.35*(1-along/260)); } // turbulent edge
       }
     }
@@ -911,7 +929,7 @@ function step(dt){
     if(twa<34&&!b.luff){ b.ironT=(b.ironT||0)+dt; if(b.ironT>2.5){ target=-VMAX*0.16*Math.min(1,(b.ironT-2.5)/2)*(0.6+0.4*w.spd); if(b.me&&!b.ironMsg){ b.ironMsg=1; say('Stuck head to wind · drifting backwards',2.4,'bad'); } } }
     else { b.ironT=0; b.ironMsg=0; }
     b.v+=(target-b.v)*(target>b.v?0.5:(b.luff?0.55:0.32))*dt;
-    b.v*=1-Math.min(0.5,Math.abs(b.turn)/80*0.22*dt)*(b.me||b.remote?1:[1,0.75,0.45][S.lvl||0]);
+    b.v*=1-Math.min(0.5,Math.abs(b.turn)/80*0.22*dt);
     b.v=Math.max(-VMAX*0.18,b.v);
     b.prevY=b.y; b.prevX=b.x; const ox0=b.x, oy0=b.y;
     b.x+=Math.sin(b.h*D2R)*b.v*dt; b.y-=Math.cos(b.h*D2R)*b.v*dt;
@@ -976,8 +994,8 @@ function step(dt){
       if(d<r&&d>0.01){
         a.x=m.x+dx/d*r;a.y=m.y+dy/d*r;a.v*=0.97;
         const key='m'+a.id+'-'+m.x+m.y;
-        const nextM=!a.started?(m===PIN):isUp(a.leg)?(m===WM):isGate(a.leg)?(m===G1||m===G2):(m===FA||m===FB);   // only the mark you have to round next counts
-        if(rulesOn()&&!a.done&&m!==CB&&nextM&&!(S.contacts.get(key)>now)){S.contacts.set(key,now+5); penalize(a,1,'31');}
+        const nextM=!a.started?(m===PIN||m===CB):isUp(a.leg)?(m===WM):isGate(a.leg)?(m===G1||m===G2):(m===FA||m===FB);   // the next mark counts; start buoy and committee boat always count
+        if(rulesOn()&&!a.done&&(nextM||m===PIN||m===CB)&&!(S.contacts.get(key)>now)){S.contacts.set(key,now+5); penalize(a,1,'31');}
       }
     }
   }
