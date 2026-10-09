@@ -95,6 +95,7 @@ select.txt{appearance:auto}
 @media (max-width:700px){#topbtn{gap:4px;max-width:calc(100vw - 16px)} #topbtn button{padding:6px 7px!important;font-size:11px!important} #bZoomIn,#bZoomOut,#bVMG,#bLuff,#bMark{display:none!important}}
 #topbtn button{white-space:nowrap;background:rgba(5,28,41,.6);color:var(--ink);border:1px solid rgba(234,244,247,.25);border-radius:4px;padding:6px 10px;font:600 12px var(--f-body);cursor:pointer}
 #touch .arrow{font-size:36px;line-height:1;width:62px!important;height:62px!important;flex:0 0 auto}
+@media (min-width:561px){ #touch{left:50%;right:auto;transform:translateX(-50%);width:min(520px,100vw);gap:10px} }
 #touch .acts{flex:1 1 auto;display:flex;flex-wrap:wrap;justify-content:center;align-items:flex-end;gap:6px;min-width:0}
 @media (max-width:560px){
   #touch{padding:0 8px calc(8px + env(safe-area-inset-bottom,0px));gap:6px}
@@ -165,7 +166,7 @@ select.txt{appearance:auto}
     <div class="row quick"><span class="lbl">Mode</span>
       <div class="seg" id="segM"><button type="button" data-v="0" aria-pressed="true">Fleet Race</button><button type="button" data-v="1">Opti Team Race 4:4</button></div>
     </div>
-    <div class="row quick" id="practiceRow"><span class="lbl">Practice against computer boats (number of opponents in Fleet Race only)</span>
+    <div class="row quick" id="practiceRow"><span class="lbl" id="practiceLbl">Opponents and level of the computer boats</span>
       <div class="seg" id="segN"><button type="button" data-v="3">3</button><button type="button" data-v="5" aria-pressed="true">5</button><button type="button" data-v="7">7</button></div>
       <div class="seg" id="segD"><button type="button" data-v="0">Club</button><button type="button" data-v="1" aria-pressed="true">National</button><button type="button" data-v="2">Worlds</button></div>
     </div>
@@ -1421,7 +1422,7 @@ function drawHUD(me,rank,total){
       const t2='TWA '+tw+'°'+(me.drift>0.5?'  ·  DRIFT '+(me.drift/VMAX*5.4).toFixed(1)+' kn':''); ctx.font='700 11px '+MONO;
       const bw=ctx.measureText(t2).width+20, by=10+166+(S.team?56:0); ctx.fillStyle='rgba(5,28,41,.72)'; roundRect(12,by,bw,22,5); ctx.fill();
       ctx.fillStyle='#eaf4f7'; ctx.textAlign='left'; ctx.fillText(t2,22,by+15); }
-    else { ctx.font='700 12px '+MONO; const bw=ctx.measureText(txt).width+28, by=VH-40;
+    else { ctx.font='700 12px '+MONO; const bw=ctx.measureText(txt).width+28, by=VH-104;   // above the steering buttons
     ctx.fillStyle='rgba(5,28,41,.72)'; roundRect(VW/2-bw/2,by,bw,26,5); ctx.fill();
     ctx.fillStyle='#eaf4f7'; ctx.textAlign='center'; ctx.fillText(txt,VW/2,by+17); } }
   // minimap
@@ -2186,8 +2187,8 @@ const DIFF=["Club","National","Worlds"];
 function bestKey(){return 'std-best-'+settings.d;}
 function showBest(){try{const v=JSON.parse(localStorage.getItem(bestKey())||'null'); $('best').textContent=v?('Best practice ('+DIFF[settings.d]+'): '+ordN(v.p)+' place · '+fmt(v.t)):'';}catch(e){$('best').textContent='';}}
 $('segD').addEventListener('click',showBest); showBest();
-// Opti Team Race: no options to choose, so the opponent / level row disappears
-function updModeRow(){ const r=$('practiceRow'); if(r) r.hidden=settings.m===1; }
+// Opti Team Race: the number of boats is fixed (4 against 4), only the level can be chosen
+function updModeRow(){ const team=settings.m===1; $('segN').hidden=team; const l=$('practiceLbl'); if(l) l.textContent=team?'Level of the computer boats':'Opponents and level of the computer boats'; }
 $('segM').addEventListener('click',updModeRow); updModeRow();
 // full screen button (website embed): opens the game in its own tab and starts the race right away with the chosen settings
 { const a=$('bFull'); if(a) a.addEventListener('click',()=>{ const u=new URL(location.href); u.searchParams.set('start','1'); u.searchParams.set('m',settings.m); u.searchParams.set('n',settings.n); u.searchParams.set('d',settings.d); a.href=u.toString(); }); }
