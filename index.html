@@ -660,7 +660,7 @@ function newRace(opt){
   const puffs=[];
   for(let i=0;i<48;i++) puffs.push({i,k:0,x:-1300+R()*2600,y:-3600+R()*4200,r:140+R()*240,s:0.25+R()*0.35,veer:(R()-0.5)*24});
   const boats=[];
-  const skill=[0.95,1.15,1.45][opt.d];   // Club · National · Worlds (harder: all levels faster) (WM boats are faster than a perfectly sailed own boat)
+  const skill=[1.28,1.40,1.50][opt.d];   // Club · National · Worlds (all levels hard: National nearly Worlds, Club a little easier) (WM boats are faster than a perfectly sailed own boat)
   const myX=-180+Math.random()*360;
   const team=!!opt.team, myTeam=team?(opt.myTeam|0):-1;
   boats.push(makeBoat({me:true,flag:myFlag||null,gear:Object.assign({},myGear),sailNo:mySailNo||null,skin:team?null:mySkin,name:opt.nick||'You',color:team?TEAMC[myTeam]:SKINS[mySkin].hull,team:myTeam,x:myX,y:300+Math.random()*30,h:Math.random()<0.5?80:-80}));
@@ -671,11 +671,11 @@ function newRace(opt){
     const n=botTeams.length, hx=-200+400*(i+0.5)/n+(R()-0.5)*40;
     const nm=team?(TEAMN[tm]+' '+(++cnt[tm]+(tm===myTeam&&!opt.teamBots?1:0))):NAMES[i%NAMES.length];
     boats.push(makeBoat({name:nm+(opt.online?' (KI)':''),color:team?TEAMC[tm]:COLORS[i%8],team:tm,x:hx,y:150+R()*120,h:R()<0.5?70:-70,
-      skill:skill*(opt.d>=1?0.985+R()*0.02:0.97+R()*0.05),smart:[0.6,1.6,3.3][opt.d]*(opt.d>=1?0.95+R()*0.1:0.85+R()*0.3),side:R()<0.5?1:-1,hold:{x:hx,y:110+R()*70},aimX:(R()-0.5)*120,fx:(R()-0.5)*260}));
+      skill:skill*(opt.d>=1?0.985+R()*0.02:0.97+R()*0.05),smart:[2.4,3.1,3.5][opt.d]*(opt.d>=1?0.95+R()*0.1:0.85+R()*0.3),side:R()<0.5?1:-1,hold:{x:hx,y:110+R()*70},aimX:(R()-0.5)*120,fx:(R()-0.5)*260}));
   });
   ZONE=(team?2:3)*BL;
   freeRot=null;
-  S={team, myTeam,seedOff:(opt.seed%997)/7, wHist:[], t:-COUNTDOWN, boats, remote:new Map(), puffs, wbase:(R()-0.5)*10, ph1:R()*6, ph2:R()*6, msgs:[], finishers:[], endAt:null, R:rng(opt.seed^0x5f3759df), cam:{x:myX,y:150}, gun:false, contacts:new Map(), online:!!opt.online, lvl:opt.d|0}; for(const b of boats) b.spawn={x:b.x,y:b.y,h:b.h,v:b.v}; for(const id of ['bLuff','tS']){ const e=document.getElementById(id); if(e){ e.textContent='Luff'; e.style.background=''; e.style.color=''; } }
+  S={team, myTeam,seedOff:(opt.seed%997)/7, wHist:[], t:-COUNTDOWN, boats, remote:new Map(), puffs, wbase:(R()-0.5)*10, ph1:R()*6, ph2:R()*6, msgs:[], finishers:[], endAt:null, R:rng(opt.seed^0x5f3759df), cam:{x:myX,y:150}, gun:false, contacts:new Map(), online:!!opt.online, lvl:[1,2,2][opt.d|0]}; for(const b of boats) b.spawn={x:b.x,y:b.y,h:b.h,v:b.v}; for(const id of ['bLuff','tS']){ const e=document.getElementById(id); if(e){ e.textContent='Luff'; e.style.background=''; e.style.color=''; } }
   say(opt.online?'Entry open · 1 minute':'2 minutes to start · racing rules apply',3);
 }
 const allBoats=()=>S.remote.size?S.boats.concat([...S.remote.values()]):S.boats;
