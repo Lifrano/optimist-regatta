@@ -165,13 +165,13 @@ select.txt{appearance:auto}
     <div class="row quick"><span class="lbl">Mode</span>
       <div class="seg" id="segM"><button type="button" data-v="0" aria-pressed="true">Fleet Race</button><button type="button" data-v="1">Opti Team Race 4:4</button></div>
     </div>
-    <div class="row quick"><span class="lbl">Practice against computer boats (number of opponents in Fleet Race only)</span>
+    <div class="row quick" id="practiceRow"><span class="lbl">Practice against computer boats (number of opponents in Fleet Race only)</span>
       <div class="seg" id="segN"><button type="button" data-v="3">3</button><button type="button" data-v="5" aria-pressed="true">5</button><button type="button" data-v="7">7</button></div>
       <div class="seg" id="segD"><button type="button" data-v="0">Club</button><button type="button" data-v="1" aria-pressed="true">National</button><button type="button" data-v="2">Worlds</button></div>
     </div>
 
     <button class="go quick" id="bStart" type="button">Start practice</button>
-    <a class="ghost quick" id="bFull" href="#" target="_blank" rel="noopener" hidden style="text-align:center;text-decoration:none">Play in full screen ⤢</a>
+    <a class="go quick" id="bFull" href="#" target="_blank" rel="noopener" hidden style="text-align:center;text-decoration:none">Start practice in full screen ⤢</a>
     <div class="row fit-drop" data-p="7"><button class="ghost" id="bRules" type="button">Racing rules</button><button class="ghost online-only" id="bRank" type="button">Rankings</button></div>
     <dl class="keys m-hide fit-drop" data-p="1">
       <dt>← → / A D</dt><dd>Steer</dd>
@@ -2186,6 +2186,14 @@ const DIFF=["Club","National","Worlds"];
 function bestKey(){return 'std-best-'+settings.d;}
 function showBest(){try{const v=JSON.parse(localStorage.getItem(bestKey())||'null'); $('best').textContent=v?('Best practice ('+DIFF[settings.d]+'): '+ordN(v.p)+' place · '+fmt(v.t)):'';}catch(e){$('best').textContent='';}}
 $('segD').addEventListener('click',showBest); showBest();
+// Opti Team Race: no options to choose, so the opponent / level row disappears
+function updModeRow(){ const r=$('practiceRow'); if(r) r.hidden=settings.m===1; }
+$('segM').addEventListener('click',updModeRow); updModeRow();
+// full screen button (website embed): opens the game in its own tab and starts the race right away with the chosen settings
+{ const a=$('bFull'); if(a) a.addEventListener('click',()=>{ const u=new URL(location.href); u.searchParams.set('start','1'); u.searchParams.set('m',settings.m); u.searchParams.set('n',settings.n); u.searchParams.set('d',settings.d); a.href=u.toString(); }); }
+{ const q=new URLSearchParams(location.search); if(q.get('start')==='1'){ const pick=(id,v)=>{ const b=[...$(id).children].find(x=>x.dataset.v===String(v)); if(b) b.click(); };
+    if(q.has('m')) pick('segM',q.get('m')); if(q.has('n')) pick('segN',q.get('n')); if(q.has('d')) pick('segD',q.get('d'));
+    history.replaceState(null,'',location.pathname); setTimeout(()=>$('bStart').click(),400); } }
 
 function renderSkins(){
   const box=$('skins'); box.innerHTML='';
