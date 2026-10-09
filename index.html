@@ -633,7 +633,7 @@ let uid=1;
 
 // stronger wind (long arrows): faster and able to point higher; light wind (short arrows): slower and must sail lower
 const chE=w=>clamp(CH-(w.spd-1)*20,38,50);
-let autoVMG=false, lookMark=true;   // Mark view is on by default (3D)
+let autoVMG=false, lookMark=true, freeRot=null;   // freeRot: after switching Mark view off, the view stays where it was and you look around from there   // Mark view is on by default (3D)
 function nextMarkOf(b){ if(!b.started||isUp(b.leg)) return WM;   // before the start and on every beat: look at the windward mark
   if(isGate(b.leg)) return LM; return {x:(FA.x+FB.x)/2,y:FA.y}; }
 function updMarkBtn(){ for(const id of ['bMark','tM']){ const b=document.getElementById(id); if(b){ b.style.background=lookMark?'#5ee0a0':''; b.style.color=lookMark?'#08202d':''; } } }
@@ -674,6 +674,7 @@ function newRace(opt){
       skill:skill*(opt.d>=1?0.985+R()*0.02:0.97+R()*0.05),smart:[0.6,1.6,3.3][opt.d]*(opt.d>=1?0.95+R()*0.1:0.85+R()*0.3),side:R()<0.5?1:-1,hold:{x:hx,y:110+R()*70},aimX:(R()-0.5)*120,fx:(R()-0.5)*260}));
   });
   ZONE=(team?2:3)*BL;
+  freeRot=null;
   S={team, myTeam,seedOff:(opt.seed%997)/7, wHist:[], t:-COUNTDOWN, boats, remote:new Map(), puffs, wbase:(R()-0.5)*10, ph1:R()*6, ph2:R()*6, msgs:[], finishers:[], endAt:null, R:rng(opt.seed^0x5f3759df), cam:{x:myX,y:150}, gun:false, contacts:new Map(), online:!!opt.online, lvl:opt.d|0}; for(const b of boats) b.spawn={x:b.x,y:b.y,h:b.h,v:b.v}; for(const id of ['bLuff','tS']){ const e=document.getElementById(id); if(e){ e.textContent='Luff'; e.style.background=''; e.style.color=''; } }
   say(opt.online?'Entry open · 1 minute':'2 minutes to start · racing rules apply',3);
 }
@@ -1452,7 +1453,7 @@ function render(){
   ctx=wctx; ctx.setTransform(DPR,0,0,DPR,0,0);
   const me=S.boats[0], z=zoom()*(view3d?1.6:1);
   // 3D: camera keeps looking upwind (does not turn with your boat); drag to look around
-  const nm=nextMarkOf(me), wantRot=lookMark&&view3d&&!me.done?brg(me.x,me.y,nm.x,nm.y)*D2R:(view3d?S.wbase*D2R:0); camRot+=Math.atan2(Math.sin(wantRot-camRot),Math.cos(wantRot-camRot))*(lookMark&&view3d?0.03:0.05);
+  const nm=nextMarkOf(me), wantRot=lookMark&&view3d&&!me.done?brg(me.x,me.y,nm.x,nm.y)*D2R:(view3d?(freeRot!=null?freeRot:S.wbase*D2R):0); camRot+=Math.atan2(Math.sin(wantRot-camRot),Math.cos(wantRot-camRot))*(lookMark&&view3d?0.03:0.05);
   // camera looks upwind: your boat sits in the lower part of the screen so the wind coming down the course is visible early
   const uw=view3d?camRot:S.wbase*D2R, look=(view3d?VH*0.22:VH*0.12)/z;
   const lx=me.x+Math.sin(me.h*D2R)*me.v*0.8+Math.sin(uw)*look, ly=me.y-Math.cos(me.h*D2R)*me.v*0.8-Math.cos(uw)*look;
@@ -2396,7 +2397,7 @@ $('bQuit').onclick=()=>{paused=false;$('pause').hidden=true;finish(true);};
 $('bLay').onclick=()=>{showLay=!showLay;};
 $('bLuff').onclick=()=>{ if(S&&running) setLuff(!S.boats[0].luff); };
 $('tS').onclick=()=>$('bLuff').click();
-$('bMark').onclick=()=>{ lookMark=!lookMark; updMarkBtn(); if(S&&running) say(lookMark?'Mark view: looking at the next mark':'Mark view off',1.4); };
+$('bMark').onclick=()=>{ lookMark=!lookMark; if(lookMark) freeRot=null; else { freeRot=camRot; T3.yaw=0; } updMarkBtn(); if(S&&running) say(lookMark?'Mark view: looking at the next mark':'Mark view off',1.4); };
 $('tM').onclick=()=>$('bMark').click(); updMarkBtn();
 $('tV').onclick=()=>$('bVMG').click();
 $('bVMG').onclick=()=>{ autoVMG=!autoVMG; updVMGbtn(); if(S&&running) say(autoVMG?'Auto-VMG: best angle to the wind':'Auto-VMG off',1.6,autoVMG?'good':''); };
@@ -2420,7 +2421,7 @@ c3.addEventListener('pointermove',e=>{ if(!p3.has(e.pointerId)) return; p3.set(e
   if(pin3&&p3.size===2){ const [a,b]=[...p3.values()]; const d=Math.hypot(a[0]-b[0],a[1]-b[1]); if(pin3.d>10) setZoom(pin3.z*d/pin3.d); return; }
   if(drag3){ T3.yaw-=(e.clientX-drag3.x)*0.006; T3.pitch+=(e.clientY-drag3.y)*0.004; T3.pitch=clamp(T3.pitch,-0.42,0.85); drag3={x:e.clientX,y:e.clientY}; $('bLookReset').hidden=false; } });
 for(const ev of ['pointerup','pointercancel']) c3.addEventListener(ev,e=>{ p3.delete(e.pointerId); if(p3.size<2) pin3=null; if(!p3.size) drag3=null; });
-function lookReset(){ T3.yaw=0; T3.pitch=0; pan2.x=0; pan2.y=0; $('bLookReset').hidden=true; if(S){ const me=S.boats[0]; S.cam.x=me.x; S.cam.y=me.y; } }
+function lookReset(){ freeRot=null; T3.yaw=0; T3.pitch=0; pan2.x=0; pan2.y=0; $('bLookReset').hidden=true; if(S){ const me=S.boats[0]; S.cam.x=me.x; S.cam.y=me.y; } }
 $('bCenter').onclick=lookReset;
 setInterval(()=>{ $('bCenter').hidden=view3d; },400);
 c3.addEventListener('dblclick',lookReset); $('bLookReset').onclick=lookReset;
