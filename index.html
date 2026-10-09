@@ -92,7 +92,24 @@ select.txt{appearance:auto}
 #topbtn{position:fixed;top:calc(10px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);display:flex;gap:6px}
 @media (max-width:700px){#topbtn{gap:4px;max-width:calc(100vw - 16px)} #topbtn button{padding:6px 7px!important;font-size:11px!important} #bZoomIn,#bZoomOut,#bVMG,#bLuff,#bMark{display:none!important}}
 #topbtn button{white-space:nowrap;background:rgba(5,28,41,.6);color:var(--ink);border:1px solid rgba(234,244,247,.25);border-radius:4px;padding:6px 10px;font:600 12px var(--f-body);cursor:pointer}
-#touch .arrow{font-size:36px;line-height:1;width:62px!important;height:62px!important}
+#touch .arrow{font-size:36px;line-height:1;width:62px!important;height:62px!important;flex:0 0 auto}
+#touch .acts{flex:1 1 auto;display:flex;flex-wrap:wrap;justify-content:center;align-items:flex-end;gap:6px;min-width:0}
+@media (max-width:560px){
+  #touch{padding:0 8px calc(8px + env(safe-area-inset-bottom,0px));gap:6px}
+  #touch .arrow{width:56px!important;height:56px!important;font-size:32px}
+  #touch button.tack{height:34px;padding:0 10px;font-size:13px}
+  #touch button.luff{height:30px;font-size:11px;padding:0 8px}
+  .card{padding:16px 14px;gap:10px}
+  .card>*{order:3}
+  .card>.wordmark,.card>.m-by{order:0}
+  .card>.quick{order:1}
+  .card>.m-hide{display:none}
+  .wordmark{font-size:34px}
+  .seg button{padding:8px 9px;font-size:13px}
+  .go{padding:11px 14px;font-size:19px}
+  #skinPrev,#skinPrev2{max-height:150px}
+}
+@media (max-height:560px){ .card>.m-hide{display:none} #skinPrev,#skinPrev2{max-height:120px} }
 </style>
 
 <div id="sky" hidden></div>
@@ -115,15 +132,17 @@ select.txt{appearance:auto}
 </div>
 
 <div id="touch" hidden>
-  <span style="display:flex;flex-direction:column;gap:8px;align-items:center"><span style="display:flex;gap:12px"><button class="arrow" id="tL" type="button" aria-label="Steer to port">−</button><button class="arrow" id="tR" type="button" aria-label="Steer to starboard">+</button></span><button class="tack luff" id="tM" type="button" aria-label="Look at the next mark">Mark view</button><button class="tack luff" id="tV" type="button" aria-label="Auto VMG">VMG</button><button class="tack" id="tT" type="button" aria-label="Tack or gybe">Tack/Gybe</button><button class="tack luff" id="tS" type="button" aria-label="Let the sail flap to stop">Luff</button></span>
+  <button class="arrow" id="tL" type="button" aria-label="Steer to port">−</button>
+  <span class="acts"><button class="tack luff" id="tM" type="button" aria-label="Look at the next mark">Mark view</button><button class="tack luff" id="tV" type="button" aria-label="Auto VMG">VMG</button><button class="tack" id="tT" type="button" aria-label="Tack or gybe">Tack/Gybe</button><button class="tack luff" id="tS" type="button" aria-label="Let the sail flap to stop">Luff</button></span>
+  <button class="arrow" id="tR" type="button" aria-label="Steer to starboard">+</button>
 </div>
 
 <div class="overlay" id="menu">
   <div class="card">
-    <p class="tag">Optimist · Up &amp; Down · 2 laps</p>
+    <p class="tag m-hide">Optimist · Up &amp; Down · 2 laps</p>
     <h1 class="wordmark">Optimist<br><span>Regatta</span></h1>
-    <p class="tag">developed by Train to Dominate · Florian Stindt</p>
-    <p class="lead">Beat to the windward mark, play the shifts and gusts, follow the racing rules and be first across the finish line.</p>
+    <p class="tag m-by">developed by Train to Dominate · Florian Stindt</p>
+    <p class="lead m-hide">Beat to the windward mark, play the shifts and gusts, follow the racing rules and be first across the finish line.</p>
     <div class="row"><span class="lbl">Your boat</span><canvas id="skinPrev" aria-label="3D preview of your Opti" hidden></canvas><canvas id="skinPrev2" aria-label="Preview of your Opti"></canvas></div>
     <div class="row" id="pvCtl" hidden style="justify-content:center;gap:10px"><button class="ghost" id="pvL" type="button" aria-label="Steer to port" style="min-width:56px;font-size:22px">−</button><button class="ghost" id="pvR" type="button" aria-label="Steer to starboard" style="min-width:56px;font-size:22px">+</button></div>
     <p class="tag" id="pvHint" hidden>Hold − or + to steer the boat (or swipe on the water)</p>
@@ -141,17 +160,18 @@ select.txt{appearance:auto}
     <p class="tag web-only">Online races against friends, rankings and more: coming soon as an app for iPhone and Android.</p>
     <p class="note online-only" id="onlineNote"></p>
     <hr>
-    <div class="row"><span class="lbl">Mode</span>
+    <div class="row quick"><span class="lbl">Mode</span>
       <div class="seg" id="segM"><button type="button" data-v="0" aria-pressed="true">Fleet Race</button><button type="button" data-v="1">Opti Team Race 4:4</button></div>
     </div>
-    <div class="row"><span class="lbl">Practice against computer boats (number of opponents in Fleet Race only)</span>
+    <div class="row quick"><span class="lbl">Practice against computer boats (number of opponents in Fleet Race only)</span>
       <div class="seg" id="segN"><button type="button" data-v="3">3</button><button type="button" data-v="5" aria-pressed="true">5</button><button type="button" data-v="7">7</button></div>
       <div class="seg" id="segD"><button type="button" data-v="0">Club</button><button type="button" data-v="1" aria-pressed="true">National</button><button type="button" data-v="2">Worlds</button></div>
     </div>
 
-    <button class="go" id="bStart" type="button">Start practice</button>
+    <button class="go quick" id="bStart" type="button">Start practice</button>
+    <a class="ghost quick" id="bFull" href="#" target="_blank" rel="noopener" hidden style="text-align:center;text-decoration:none">Play in full screen ⤢</a>
     <div class="row"><button class="ghost" id="bRules" type="button">Racing rules</button><button class="ghost online-only" id="bRank" type="button">Rankings</button></div>
-    <dl class="keys">
+    <dl class="keys m-hide">
       <dt>← → / A D</dt><dd>Steer</dd>
       <dt>Space</dt><dd>Automatic tack or gybe</dd>
       <dt>L · P · V</dt><dd>Laylines on/off · Pause · switch 2D/3D</dd>
@@ -282,6 +302,8 @@ select.txt{appearance:auto}
 'use strict';
 const WEBONLY=!!window.OPTI_WEB||/[?&]web=1/.test(location.search);   // website version: practice against computer boats only
 if(WEBONLY) document.documentElement.classList.add('webonly');
+if(WEBONLY){ let inFrame=true; try{ inFrame=window.self!==window.top; }catch(e){}   // embedded on the website: offer the game in its own tab
+  if(inFrame) addEventListener('DOMContentLoaded',()=>{ const a=document.getElementById('bFull'); if(a){ a.href=location.href; a.hidden=false; } }); }
 const cvs=document.getElementById('c'), hud=document.getElementById('hud');
 let ctx=cvs.getContext('2d'); const wctx=ctx, hctx=hud.getContext('2d');
 let view3d=false; try{view3d=localStorage.getItem('std-3d')==='1';}catch(e){}
@@ -1361,8 +1383,9 @@ function drawHUD(me,rank,total){
     const r=rightOfWay(me,o), give=r.k===me;
     const txt=(give?'GIVE WAY':'RIGHT OF WAY')+' · '+o.name.toUpperCase()+' · R'+r.r;
     ctx.font='700 12px '+MONO; const tw=ctx.measureText(txt).width+24;
-    ctx.fillStyle=give?'rgba(255,107,44,.92)':'rgba(94,224,160,.9)'; roundRect(VW/2-tw/2,top+40,tw,26,13); ctx.fill();
-    ctx.fillStyle='#08202d'; ctx.textAlign='center'; ctx.fillText(txt,VW/2,top+57);
+    const by=VW<600?top+222:top+40;   // phones: below the panels so it does not cover the compass
+    ctx.fillStyle=give?'rgba(255,107,44,.92)':'rgba(94,224,160,.9)'; roundRect(VW/2-tw/2,by,tw,26,13); ctx.fill();
+    ctx.fillStyle='#08202d'; ctx.textAlign='center'; ctx.fillText(txt,VW/2,by+17);
   }
   // wind widget
   const wd=windAt(me.x,me.y).dir, mean=S.wbase, shift=Math.round(norm(wd-mean));
@@ -1441,7 +1464,9 @@ function render(){
   if(view3d&&T3.ok) T3.labels(me, running&&rulesOn()?nearestThreat(me):null);
   if(running){
     const all=allBoats(), order=all.slice().sort((a,b)=>progress(b)-progress(a));
-    drawHUD(me,order.indexOf(me)+1,all.length);
+    const k=VW<440?Math.max(0.64,VW/440):1, ow=VW, oh=VH;   // small phones / embedded: shrink the HUD so it leaves room to sail
+    if(k<1){ ctx.scale(k,k); VW=ow/k; VH=oh/k; }
+    try{ drawHUD(me,order.indexOf(me)+1,all.length); } finally { VW=ow; VH=oh; }
   }
   ctx=wctx;
 }
