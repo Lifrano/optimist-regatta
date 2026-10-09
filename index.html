@@ -17,6 +17,8 @@
 .web-only{display:none}
 html.webonly .online-only{display:none!important}
 html.webonly .web-only{display:block}
+html.webonly .no-web{display:none!important}
+.fit-hid{display:none!important}
 html,body{height:100%;overflow:hidden;margin:0}
 body{background:var(--sea-deep);color:var(--ink);font-family:var(--f-body);touch-action:none;-webkit-user-select:none;user-select:none}
 canvas#c{position:fixed;left:0;top:0;display:block}
@@ -139,14 +141,14 @@ select.txt{appearance:auto}
 
 <div class="overlay" id="menu">
   <div class="card">
-    <p class="tag m-hide">Optimist · Up &amp; Down · 2 laps</p>
+    <p class="tag m-hide fit-drop" data-p="6">Optimist · Up &amp; Down · 2 laps</p>
     <h1 class="wordmark">Optimist<br><span>Regatta</span></h1>
-    <p class="tag m-by">developed by Train to Dominate · Florian Stindt</p>
-    <p class="lead m-hide">Beat to the windward mark, play the shifts and gusts, follow the racing rules and be first across the finish line.</p>
-    <div class="row"><span class="lbl">Your boat</span><canvas id="skinPrev" aria-label="3D preview of your Opti" hidden></canvas><canvas id="skinPrev2" aria-label="Preview of your Opti"></canvas></div>
-    <div class="row" id="pvCtl" hidden style="justify-content:center;gap:10px"><button class="ghost" id="pvL" type="button" aria-label="Steer to port" style="min-width:56px;font-size:22px">−</button><button class="ghost" id="pvR" type="button" aria-label="Steer to starboard" style="min-width:56px;font-size:22px">+</button></div>
-    <p class="tag" id="pvHint" hidden>Hold − or + to steer the boat (or swipe on the water)</p>
-    <div class="row" style="justify-content:space-between"><span id="skinName" style="font-weight:600"></span><button class="ghost online-only" id="bShop" type="button">Shop · Designs</button></div>
+    <p class="tag m-by fit-drop" data-p="11">developed by Train to Dominate · Florian Stindt</p>
+    <p class="lead m-hide fit-drop" data-p="2">Beat to the windward mark, play the shifts and gusts, follow the racing rules and be first across the finish line.</p>
+    <div class="row no-web fit-drop" data-p="10"><span class="lbl">Your boat</span><canvas id="skinPrev" aria-label="3D preview of your Opti" hidden></canvas><canvas id="skinPrev2" aria-label="Preview of your Opti"></canvas></div>
+    <div class="row no-web fit-drop" data-p="9" id="pvCtl" hidden style="justify-content:center;gap:10px"><button class="ghost" id="pvL" type="button" aria-label="Steer to port" style="min-width:56px;font-size:22px">−</button><button class="ghost" id="pvR" type="button" aria-label="Steer to starboard" style="min-width:56px;font-size:22px">+</button></div>
+    <p class="tag no-web fit-drop" data-p="5" id="pvHint" hidden>Hold − or + to steer the boat (or swipe on the water)</p>
+    <div class="row no-web" style="justify-content:space-between"><span id="skinName" style="font-weight:600"></span><button class="ghost online-only" id="bShop" type="button">Shop · Designs</button></div>
     <p class="tag online-only" id="skinNote"></p>
     <div class="row online-only"><span class="lbl">Online with friends</span>
       <input class="txt" id="nick" maxlength="14" placeholder="Your name" autocomplete="off">
@@ -157,9 +159,9 @@ select.txt{appearance:auto}
       <button class="ghost" id="bJoin" type="button">Join</button>
     </div>
     <div class="row online-only"><button class="ghost" id="bQuick" type="button">Find random opponents</button></div>
-    <p class="tag web-only">Online races against friends, rankings and more: coming soon as an app for iPhone and Android.</p>
+    
     <p class="note online-only" id="onlineNote"></p>
-    <hr>
+    <hr class="no-web">
     <div class="row quick"><span class="lbl">Mode</span>
       <div class="seg" id="segM"><button type="button" data-v="0" aria-pressed="true">Fleet Race</button><button type="button" data-v="1">Opti Team Race 4:4</button></div>
     </div>
@@ -170,8 +172,8 @@ select.txt{appearance:auto}
 
     <button class="go quick" id="bStart" type="button">Start practice</button>
     <a class="ghost quick" id="bFull" href="#" target="_blank" rel="noopener" hidden style="text-align:center;text-decoration:none">Play in full screen ⤢</a>
-    <div class="row"><button class="ghost" id="bRules" type="button">Racing rules</button><button class="ghost online-only" id="bRank" type="button">Rankings</button></div>
-    <dl class="keys m-hide">
+    <div class="row fit-drop" data-p="7"><button class="ghost" id="bRules" type="button">Racing rules</button><button class="ghost online-only" id="bRank" type="button">Rankings</button></div>
+    <dl class="keys m-hide fit-drop" data-p="1">
       <dt>← → / A D</dt><dd>Steer</dd>
       <dt>Space</dt><dd>Automatic tack or gybe</dd>
       <dt>L · P · V</dt><dd>Laylines on/off · Pause · switch 2D/3D</dd>
@@ -181,7 +183,7 @@ select.txt{appearance:auto}
       <dt>Drag</dt><dd>2D: pan the course · 3D: look around (double-click = reset view)</dd>
       <dt>+ − / Mouse wheel</dt><dd>Zoom in and out (two fingers on a phone)</dd>
     </dl>
-    <p class="tag" id="best"></p>
+    <p class="tag fit-drop" data-p="3" id="best"></p>
   </div>
 </div>
 
@@ -302,6 +304,15 @@ select.txt{appearance:auto}
 'use strict';
 const WEBONLY=!!window.OPTI_WEB||/[?&]web=1/.test(location.search);   // website version: practice against computer boats only
 if(WEBONLY) document.documentElement.classList.add('webonly');
+// menu must fit the screen without scrolling: drop the least important lines until it fits
+function fitMenu(){ const card=document.querySelector('#menu .card'); if(!card||document.getElementById('menu').hidden) return;
+  const drop=[...card.querySelectorAll('.fit-drop')].sort((a,b)=>a.dataset.p-b.dataset.p);
+  for(const e of drop) e.classList.remove('fit-hid'); card.style.overflowY='hidden';
+  for(const e of drop){ if(card.scrollHeight<=card.clientHeight+1) break; e.classList.add('fit-hid'); }
+  card.style.overflowY=card.scrollHeight>card.clientHeight+1?'auto':'hidden'; }
+addEventListener('resize',()=>requestAnimationFrame(fitMenu));
+addEventListener('DOMContentLoaded',()=>{ fitMenu(); const m=document.getElementById('menu'); if(m) new MutationObserver(()=>requestAnimationFrame(fitMenu)).observe(m,{attributes:true,subtree:true,attributeFilter:['hidden']}); if(document.fonts) document.fonts.ready.then(fitMenu); });
+addEventListener('load',fitMenu);
 if(WEBONLY){ let inFrame=true; try{ inFrame=window.self!==window.top; }catch(e){}   // embedded on the website: offer the game in its own tab
   if(inFrame) addEventListener('DOMContentLoaded',()=>{ const a=document.getElementById('bFull'); if(a){ a.href=location.href; a.hidden=false; } }); }
 const cvs=document.getElementById('c'), hud=document.getElementById('hud');
