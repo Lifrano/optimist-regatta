@@ -113,6 +113,10 @@ select.txt{appearance:auto}
   .go{padding:11px 14px;font-size:19px}
   #skinPrev,#skinPrev2{max-height:150px}
 }
+/* steering arrows side by side on top, VMG and the other buttons below */
+#touch{flex-wrap:wrap;justify-content:center;align-items:center;row-gap:8px;column-gap:18px}
+#touch #tR{order:1}
+#touch .acts{order:2;flex:0 0 100%}
 @media (max-width:420px){ #touch .acts{gap:3px} #touch button.tack{height:32px;font-size:11px;padding:0 7px;letter-spacing:.02em} #touch button.luff{height:28px;font-size:10px;padding:0 6px} #touch .arrow{width:48px!important;height:48px!important;font-size:28px} }
 @media (max-height:560px){ .card>.m-hide{display:none} #skinPrev,#skinPrev2{max-height:120px} }
 </style>
@@ -169,7 +173,7 @@ select.txt{appearance:auto}
       <div class="seg" id="segM"><button type="button" data-v="0" aria-pressed="true">Fleet Race</button><button type="button" data-v="1">Opti Team Race 4:4</button></div>
     </div>
     <div class="row quick" id="practiceRow"><span class="lbl" id="practiceLbl">Opponents and level of the computer boats</span>
-      <div class="seg" id="segN"><button type="button" data-v="3">3</button><button type="button" data-v="5" aria-pressed="true">5</button><button type="button" data-v="7">7</button></div>
+      <div class="seg" id="segN"><button type="button" data-v="3">3</button><button type="button" data-v="5" aria-pressed="true">5</button><button type="button" data-v="7">7</button><button type="button" data-v="20">20</button><button type="button" data-v="50">50</button></div>
       <div class="seg" id="segD"><button type="button" data-v="0">Club</button><button type="button" data-v="1" aria-pressed="true">National</button><button type="button" data-v="2">Worlds</button></div>
     </div>
 
@@ -624,7 +628,7 @@ function drawSkinCard(g,W,H,sk,noBg,txt,flag){
   g.restore();
 }
 const COUNTDOWN=120, JOIN=60;   // 2-minute start sequence; online: 1 extra minute in which others can still join
-const NAMES=['Mia','Jonas','Lotta','Ben','Ella','Finn','Ida','Paul','Emil','Greta'];
+const NAMES=['Mia','Jonas','Lotta','Ben','Ella','Finn','Ida','Paul','Emil','Greta','Noah','Lina','Leon','Emma','Luis','Clara','Theo','Mila','Henry','Frieda','Anton','Marie','Jakob','Lea','Felix','Hanna','Moritz','Nele','Oskar','Paula','Karl','Johanna','Max','Sophie','Elias','Amelie','Mats','Juna','Leo','Rosa','Jan','Merle','Tom','Pia','Ole','Lia','Jonte','Zoe','Malte','Enna'];
 const COLORS=['#2f7bf6','#16b889','#e8c21c','#b44be1','#ec4b8a','#23c4d9','#8bc34a','#f08a24','#ff6b2c'];
 const RULES={'10':'R10 · Port tack keeps clear','11':'R11 · Windward boat keeps clear','12':'R12 · Clear astern keeps clear','13':'R13 · Tacking boat keeps clear',
   '15':'R15 · Acquired right of way without giving room','18':'R18.2 · Mark-room not given','18.3':'R18.3 · Tacked in the zone','22':'R22 · Returning boat keeps clear','31':'R31 · Touched a mark'};
@@ -671,10 +675,11 @@ function newRace(opt){
   const botTeams=[]; if(team){ for(let t=0;t<2;t++) for(let i=0;i<(opt.teamBots?opt.teamBots[t]:(t===myTeam?3:4));i++) botTeams.push(t); } else for(let i=0;i<opt.bots;i++) botTeams.push(-1);
   const cnt=[0,0];
   botTeams.forEach((tm,i)=>{
-    const n=botTeams.length, hx=-200+400*(i+0.5)/n+(R()-0.5)*40;
+    // big fleets: line up in several rows behind the start line (max. 12 boats per row)
+    const n=botTeams.length, rows=Math.ceil(n/12), row=i%rows, k=Math.floor(i/rows), per=Math.ceil(n/rows), hx=-200+400*(k+0.5)/per+(R()-0.5)*(n>12?14:40), ry=row*55;
     const nm=team?(TEAMN[tm]+' '+(++cnt[tm]+(tm===myTeam&&!opt.teamBots?1:0))):NAMES[i%NAMES.length];
-    boats.push(makeBoat({name:nm+(opt.online?' (KI)':''),color:team?TEAMC[tm]:COLORS[i%8],team:tm,x:hx,y:150+R()*120,h:R()<0.5?70:-70,
-      skill,smart:[2.2,3.4,4.6][opt.d]*(0.95+R()*0.1),side:R()<0.5?1:-1,hold:{x:hx,y:110+R()*70},aimX:(R()-0.5)*120,fx:(R()-0.5)*260}));
+    boats.push(makeBoat({name:nm+(opt.online?' (KI)':''),color:team?TEAMC[tm]:COLORS[i%8],team:tm,x:hx,y:150+ry+R()*(n>12?40:120),h:R()<0.5?70:-70,
+      skill,smart:[2.2,3.4,4.6][opt.d]*(0.95+R()*0.1),side:R()<0.5?1:-1,hold:{x:hx,y:110+ry+R()*(n>12?30:70)},aimX:(R()-0.5)*120,fx:(R()-0.5)*260}));
   });
   ZONE=(team?2:3)*BL;
   freeRot=null;
@@ -1499,7 +1504,7 @@ function render(){
   if(view3d&&T3.ok) T3.labels(me, running&&rulesOn()?nearestThreat(me):null);
   if(running){
     const all=allBoats(), order=all.slice().sort((a,b)=>progress(b)-progress(a));
-    const k=Math.max(0.6,Math.min(1,VW/440,VH/600)), ow=VW, oh=VH;   // small phones / embedded: shrink the HUD so it leaves room to sail
+    const k=Math.max(0.5,Math.min(0.88,VW/560,VH/760)), ow=VW, oh=VH;   // compact HUD everywhere, even smaller on phones / embedded, so it leaves room to sail
     if(k<1){ ctx.scale(k,k); VW=ow/k; VH=oh/k; } hudK=k;
     try{ drawHUD(me,order.indexOf(me)+1,all.length); } finally { VW=ow; VH=oh; }
   }
