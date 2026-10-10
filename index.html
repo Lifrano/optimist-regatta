@@ -679,7 +679,7 @@ function newRace(opt){
     const n=botTeams.length, rows=Math.ceil(n/12), row=i%rows, k=Math.floor(i/rows), per=Math.ceil(n/rows), hx=-200+400*(k+0.5)/per+(R()-0.5)*(n>12?14:40), ry=row*55;
     const nm=team?(TEAMN[tm]+' '+(++cnt[tm]+(tm===myTeam&&!opt.teamBots?1:0))):NAMES[i%NAMES.length];
     boats.push(makeBoat({name:nm+(opt.online?' (KI)':''),color:team?TEAMC[tm]:COLORS[i%8],team:tm,x:hx,y:150+ry+R()*(n>12?40:120),h:R()<0.5?70:-70,
-      skill,smart:[2.2,4.6,6.2][opt.d]*(0.95+R()*0.1),side:R()<0.5?1:-1,hold:{x:hx,y:110+ry+R()*(n>12?30:70)},aimX:(R()-0.5)*120,fx:(R()-0.5)*260}));
+      skill,smart:[2.2,4.6,6.2][opt.d]*(0.95+R()*0.1),side:R()<0.5?1:-1,hold:{x:hx,y:38+ry*0.8+R()*(n>12?12:22)},aimX:(R()-0.5)*120,fx:(R()-0.5)*260}));
   });
   ZONE=(team?2:3)*BL;
   freeRot=null;
@@ -781,15 +781,23 @@ function aiDesired(b,w){
   if(S.gun&&b.luff&&!b.me&&!b.remote) b.luff=false;
   if(!S.gun||b.ocs){
     if(b.ocs) return brg(b.x,b.y,b.x*0.9,70);
-    const appr=b.y/(VMAX*0.5)+[4,3,2.5,2.2][LV||0];
+    const appr=b.y/(VMAX*0.4)+[6,6,5,4.5][LV||0];   // when to pull the sail in and go for the line
+    if(b.y<6&&tl>1.2){ if(!b.me&&!b.remote) b.luff=false; return brg(b.x,b.y,b.x*0.95,45); }   // too early over (or on) the line before the start: dip back below it
     if(tl>appr){
-      let hx=b.hold.x; if(TC>=3){ const fav=norm(w.dir); if(Math.abs(fav)>3) hx=clamp(hx*0.7+Math.sign(fav)*80,PIN.x+40,CB.x-40); }
-      const dx=hx-b.x, dy=b.hold.y-b.y;
-      if(dx*dx+dy*dy<45*45){ if((b.x-hx)*Math.sign(Math.sin((w.dir+b.side*85)*D2R))>30) b.side=-b.side; return w.dir+b.side*85; }   // wait near the line on a beam reach (never head to wind, so no drifting back)
-      return brg(b.x,b.y,hx,b.hold.y);
+      let hx=b.hold.x; if(TC>=3){ const fav=norm(S.wbase); if(Math.abs(fav)>2) hx=clamp(hx*0.8+Math.sign(fav)*55,PIN.x+35,CB.x-35); }   // Worlds: wait closer to the favoured end of the line (mean wind)
+      const hy=b.hold.y+[40,40,15,0][LV||0], dx=hx-b.x, dy=hy-b.y, dd=Math.hypot(dx,dy), bot=!b.me&&!b.remote;
+      // lined up like a real Opti start: on starboard, close-hauled, sail flapping, (almost) stopped just below the line
+      if(dd<30||(b.parked&&dd<45)){ b.parked=true; b.side=-1; if(bot) b.luff=true; return w.dir-50; }
+      b.parked=false;
+      if(bot) b.luff=dd<110&&b.v>VMAX*0.3;   // slow down on the way to the spot
+      const tb=brg(b.x,b.y,hx,hy), rr=norm(tb-w.dir);
+      if(Math.abs(rr)<48) return w.dir+(rr>=0?1:-1)*48;   // spot lies upwind: beat up to it
+      return tb;
     }
     // final approach: ease the sail (luff) when arriving too early, sheet in to hit the line at the gun
-    if(LV>=1&&!b.me&&!b.remote){ const vf=VMAX*0.55*b.skill; b.luff=b.y>2&&b.y<70&&b.y<vf*tl*0.92-6; }   // only luff close to the line (otherwise the boat would drift away backwards) 
+    // keep the sail flapping as long as sheeting in now would get the boat to the line before the gun; Worlds hit the line at the gun at full speed, Club a few lengths late
+    if(LV>=1&&!b.me&&!b.remote){ const h=w.dir+b.side*chE(w), Vt=polar(Math.abs(norm(h-w.dir))+(w.spd-1)*20)*VMAX*(0.3+0.7*w.spd)*b.shade*b.skill*Math.max(0.2,Math.cos(h*D2R)), v0=Math.max(0,b.v*Math.cos(b.h*D2R)), e=1-Math.exp(-tl/2), dist=Vt*(tl-2*e)+v0*2*e;
+      b.luff=b.y>2&&dist>b.y-[35,35,14,3][LV]; }
     if(b.y<26&&tl>0) return w.dir+b.side*(LV>=1?chE(w):20);
     return w.dir+b.side*chE(w);
   }
@@ -834,7 +842,8 @@ function aiSteer(b,w){
   if(b.rescue>S.t){ let best=null, bs=-1e9;   // pick a sailable heading that leads away from the shore and back towards the course
     for(let a=0;a<360;a+=15){ const tw=Math.abs(norm(a-w.dir)); if(tw<55) continue; const px=b.x+Math.sin(a*D2R)*45, py=b.y-Math.cos(a*D2R)*45; if(!LAKE.water(px,py)) continue;
       const sc=Math.min(LAKE.dist(px,py),120)-Math.hypot(px,py-clamp(b.y,WM.y+300,0))*0.6; if(sc>bs){bs=sc;best=a;} }
-    if(best!=null&&Math.abs(b.x)<880&&b.v>VMAX*0.06) return best;   // aground (no speed): also push the boat back into open water below
+    const aground=!LAKE.water(b.x,b.y)||LAKE.dist(b.x,b.y)<22;
+    if(best!=null&&Math.abs(b.x)<880&&!aground) return best;   // only a boat that is really aground gets pushed back into open water
     const dx=-b.x, dy=clamp(b.y,WM.y+300,0)-b.y, dl=Math.hypot(dx,dy)||1; for(let k=1;k<=40;k++){ const nx=b.x+dx/dl*k*3, ny=b.y+dy/dl*k*3; if(LAKE.water(nx,ny)){ b.x+=(nx-b.x)*0.1+dx/dl*1.5; b.y+=(ny-b.y)*0.1+dy/dl*1.5; break; } }
     if(best!=null) return best; return brg(b.x,b.y,0,clamp(b.y,WM.y+300,0)); }
   let d=aiDesired(b,w);
@@ -850,11 +859,12 @@ function aiSteer(b,w){
     if(o===b||o.done) continue;
     const dx=o.x-b.x, dy=o.y-b.y, dist=Math.hypot(dx,dy);
     if(dist>85+20*(S.lvl||0)) continue;   // stronger bots look further ahead
+    if(!S.gun&&(dist>55||b.v<VMAX*0.15)) continue;   // before the start the fleet lines up close together: only dodge real collisions
     const relB=norm(brg(b.x,b.y,o.x,o.y)-b.h);
     if(Math.abs(relB)>60+8*(S.lvl||0)) continue;
     if(rightOfWay(b,o).k===b){ d=b.h-(Math.sign(relB)||1)*40; break; }
   }
-  for(const o of allBoats()){ if(o===b||o.done) continue; const dist=Math.hypot(o.x-b.x,o.y-b.y); if(dist>48+8*(S.lvl||0)) continue;
+  for(const o of allBoats()){ if(o===b||o.done) continue; const dist=Math.hypot(o.x-b.x,o.y-b.y); if(dist>48+8*(S.lvl||0)) continue; if(!S.gun&&(dist>32||b.v<VMAX*0.2)) continue;
     const relB=norm(brg(b.x,b.y,o.x,o.y)-b.h); if(Math.abs(relB)<=120&&rightOfWay(b,o).k===b){ d=b.h-(Math.sign(relB)||1)*25; break; } }   // overlapped alongside: move away
   // don't tack or gybe into another boat: hold the course until there is room
   // (but only for a few seconds: two boats side by side must never block each other's tack for ever)
