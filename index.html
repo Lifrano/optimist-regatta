@@ -799,20 +799,20 @@ function aiDesired(b,w){
   const UA=LV>=1?Math.max(36,bestVMGangle(w,true)):chE(w);
   if(Math.abs(rel)<UA+2){
     const curSide=Math.sign(norm(b.h-w.dir))||b.side;
-    if(Math.abs(norm(b.h-w.dir))<70&&!(TC>=3&&b.tackTo>S.t)) b.side=curSide;   // follow the actual tack (Worlds: never undo a tack that has just been started)
+    if(Math.abs(norm(b.h-w.dir))<70&&!(b.tackTo>S.t)) b.side=curSide;   // follow the actual tack, but never undo a tack that has just been started
     let want=false;
     if(Math.sign(rel)===-b.side&&Math.abs(rel)>UA-3) want=true;
     const off=Math.abs(norm(w.dir+b.side*UA-bt));
-    const pro=TC>=3;   // Worlds: tack only for a reason (header, layline, dirty air, shore) – every tack costs speed
+    const pro=TC>=2;   // National / Worlds: tack only for a reason (header, layline, dirty air, shore) – every tack costs speed
     if(!pro&&off>UA+7&&b.cool<0&&S.R()<b.smart*0.04) want=true;
     // play the shifts: tack onto the lifted tack when it points clearly closer to the mark (stronger bots do this more often)
     { const cur=Math.abs(norm(w.dir+b.side*UA-bt)), oth=Math.abs(norm(w.dir-b.side*UA-bt)); if(!pro&&cur-oth>14-b.smart*4&&b.cool<0&&S.R()<b.smart*0.05) want=true; }
-    // Worlds: sail the lifted tack – tack as soon as the wind heads you against its mean direction (oscillating shifts), unless that leads away from the mark
-    if(pro&&b.cool<0){ const sh=norm(w.dir-S.wbase); if(b.side*sh>7&&!(b.side*sh<0)){ const oth=Math.abs(norm(w.dir-b.side*UA-bt)); if(oth<UA+25) want=true; } }
+    // National / Worlds: sail the lifted tack – tack as soon as the wind heads you (Worlds reacts to smaller shifts) against its mean direction (oscillating shifts), unless that leads away from the mark
+    if(pro&&b.cool<0){ const sh=norm(w.dir-S.wbase); if(b.side*sh>(TC>=3?7:16)){ const oth=Math.abs(norm(w.dir-b.side*UA-bt)); if(oth<UA+25) want=true; } }
     // National / Worlds: get out of dirty air quickly
     if(TC>=1&&b.cool<0&&b.shade<[1,0.8,0.88,0.85][TC]&&S.R()<b.smart*0.08) want=true;
     if(Math.abs(b.x)>720&&Math.sign(b.x)===Math.sign(Math.sin((w.dir+b.side*UA)*D2R))) { want=true; b.cool=-1; }   // never sail on towards the shore
-    if(want&&b.cool<0){b.side=-b.side;b.tackTo=S.t+4;b.cool=(LV>=3?4+S.R()*1.5:(LV===2?3:5)+S.R()*4);}
+    if(want&&b.cool<0){b.side=-b.side;b.tackTo=S.t+4;b.cool=(LV>=3?4+S.R()*1.5:LV===2?8+S.R()*2:5+S.R()*4);}
     return w.dir+b.side*UA;
   }
   if(LV>=1&&Math.abs(rel)>100){ // downwind: best VMG angle, gybe onto the side that points closer to the target
@@ -833,8 +833,8 @@ function aiSteer(b,w){
   if(S.gun&&!b.done){ b.slowT=(b.v<VMAX*0.06)?(b.slowT||0)+1/60:0; if(b.slowT>4||Math.abs(b.x)>880){ if(!(b.rescue>S.t)) b.rescue=S.t+6; b.slowT=0; } }
   if(b.rescue>S.t){ let best=null, bs=-1e9;   // pick a sailable heading that leads away from the shore and back towards the course
     for(let a=0;a<360;a+=15){ const tw=Math.abs(norm(a-w.dir)); if(tw<55) continue; const px=b.x+Math.sin(a*D2R)*45, py=b.y-Math.cos(a*D2R)*45; if(!LAKE.water(px,py)) continue;
-      const sc=LAKE.dist(px,py)-Math.hypot(px,py-clamp(b.y,WM.y+300,0))*0.15; if(sc>bs){bs=sc;best=a;} }
-    if(best!=null&&Math.abs(b.x)<880) return best;
+      const sc=Math.min(LAKE.dist(px,py),120)-Math.hypot(px,py-clamp(b.y,WM.y+300,0))*0.6; if(sc>bs){bs=sc;best=a;} }
+    if(best!=null&&Math.abs(b.x)<880&&b.v>VMAX*0.06) return best;   // aground (no speed): also push the boat back into open water below
     const dx=-b.x, dy=clamp(b.y,WM.y+300,0)-b.y, dl=Math.hypot(dx,dy)||1; for(let k=1;k<=40;k++){ const nx=b.x+dx/dl*k*3, ny=b.y+dy/dl*k*3; if(LAKE.water(nx,ny)){ b.x+=(nx-b.x)*0.1+dx/dl*1.5; b.y+=(ny-b.y)*0.1+dy/dl*1.5; break; } }
     if(best!=null) return best; return brg(b.x,b.y,0,clamp(b.y,WM.y+300,0)); }
   let d=aiDesired(b,w);
