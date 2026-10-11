@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><script>window.OPTI_WEB=true</script></head><body style="margin:0">
-<title>Opti Regatta</title>
+<title>Optimal Regatta</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=Chivo:wght@400;600;700&family=Chivo+Mono:wght@500;700&display=swap">
 <style>
@@ -148,11 +148,11 @@ select.txt{appearance:auto}
 
 <div class="overlay" id="menu">
   <div class="card">
-    <p class="tag m-hide fit-drop" data-p="6">Opti · Up &amp; Down · 2 laps</p>
-    <h1 class="wordmark">Opti<br><span>Regatta</span></h1>
+    <p class="tag m-hide fit-drop" data-p="6">Dinghy racing · Start – 1 – 2 – 3s/3p – Finish</p>
+    <h1 class="wordmark">Optimal<br><span>Regatta</span></h1>
     <p class="tag m-by fit-drop" data-p="11">developed by Train to Dominate · Florian Stindt</p>
-    <p class="lead m-hide fit-drop" data-p="2">Beat to the windward mark, play the shifts and gusts, follow the racing rules and be first across the finish line.</p>
-    <div class="row no-web fit-drop" data-p="10"><span class="lbl">Your boat</span><canvas id="skinPrev" aria-label="3D preview of your Opti" hidden></canvas><canvas id="skinPrev2" aria-label="Preview of your Opti"></canvas></div>
+    <p class="lead m-hide fit-drop" data-p="2">Beat to mark 1, play the shifts and gusts, follow the racing rules and be first across the finish line.</p>
+    <div class="row no-web fit-drop" data-p="10"><span class="lbl">Your boat</span><canvas id="skinPrev" aria-label="3D preview of your boat" hidden></canvas><canvas id="skinPrev2" aria-label="Preview of your boat"></canvas></div>
     <div class="row no-web fit-drop" data-p="9" id="pvCtl" hidden style="justify-content:center;gap:10px"><button class="ghost" id="pvL" type="button" aria-label="Steer to port" style="min-width:56px;font-size:22px">−</button><button class="ghost" id="pvR" type="button" aria-label="Steer to starboard" style="min-width:56px;font-size:22px">+</button></div>
     <p class="tag no-web fit-drop" data-p="5" id="pvHint" hidden>Hold − or + to steer the boat (or swipe on the water)</p>
     <div class="row no-web" style="justify-content:space-between"><span id="skinName" style="font-weight:600"></span><button class="ghost online-only" id="bShop" type="button">Shop · Designs</button></div>
@@ -170,7 +170,7 @@ select.txt{appearance:auto}
     <p class="note online-only" id="onlineNote"></p>
     <hr class="no-web">
     <div class="row quick"><span class="lbl">Mode</span>
-      <div class="seg" id="segM"><button type="button" data-v="0" aria-pressed="true">Fleet Race</button><button type="button" data-v="1">Opti Team Race 4:4</button></div>
+      <div class="seg" id="segM"><button type="button" data-v="0" aria-pressed="true">Fleet Race</button><button type="button" data-v="1">Team Race 4:4</button></div>
     </div>
     <div class="row quick" id="practiceRow"><span class="lbl" id="practiceLbl">Opponents and level of the computer boats</span>
       <div class="seg" id="segN"><button type="button" data-v="3">3</button><button type="button" data-v="5" aria-pressed="true">5</button><button type="button" data-v="7">7</button><button type="button" data-v="20">20</button><button type="button" data-v="50">50</button></div>
@@ -234,12 +234,12 @@ select.txt{appearance:auto}
       <li><b>R18.2b</b>The boat that reaches the zone clear ahead gets mark-room.</li>
       <li><b>R18.3</b>A boat that tacks inside the zone at the windward mark gets no mark-room and keeps clear.</li>
       <li><b>R22</b>A boat returning after a premature start keeps clear.</li>
-      <li><b>R28</b>Leave the windward mark to port, sail through the leeward gate, finish between the green buoys.</li>
+      <li><b>R28</b>Fleet race: start – leave marks 1 and 2 to port – through gate 3s/3p (round 3s to starboard or 3p to port) – upwind finish between the blue buoy and the committee boat.</li>
       <li><b>R44</b>Instead of penalty turns: a boat that breaks a rule (contact, touching a mark) is much slower for exactly 5 seconds. During that time it is see-through and other boats sail straight through it.</li>
     </ul>
     <p class="tag">Team Race (Appendix D)</p>
     <ul class="rules">
-      <li><b>D</b>Two teams of 4 Optis each. Short course: start, windward, leeward gate, windward, finish (5 marks).</li>
+      <li><b>D</b>Two teams of 4 boats each. Course: start – marks 1 and 2 to starboard – marks 3 and 4 to port – upwind finish.</li>
       <li><b>D1</b>The zone is only 2 boat lengths.</li>
       <li><b>D2</b>Contact between boats of the same team is not penalised. Otherwise the 5-second penalty applies here too.</li>
       <li><b>D3</b>Each boat scores its finishing place as points. The team with fewer points wins. On a tie, the team <i>without</i> first place wins. DNF, RET and DSQ score as many points as boats in the race.</li>
@@ -255,7 +255,7 @@ select.txt{appearance:auto}
     <p class="lead">Pick a design. Until the shop takes payments, all designs are unlocked for testing.</p>
     <div class="snbox online-only">
       <span class="lbl">Your own sail number · €4.99</span>
-      <p class="lead" style="font-size:13px">Without your own number the sail says “OPTI”. With your own number your boat carries a country code and number, and that combination is yours alone.</p>
+      <p class="lead" style="font-size:13px">Without your own number the sail says “T2D” (Train to Dominate). With your own number your boat carries a country code and number, and that combination is yours alone.</p>
       <div class="row">
         <select id="snC" class="txt code" aria-label="Country code"></select>
         <input id="snN" class="txt code" inputmode="numeric" maxlength="5" placeholder="1234" aria-label="Sail number" autocomplete="off">
@@ -365,7 +365,7 @@ const $=id=>document.getElementById(id);
 const LAKE=(()=>{
   // outline checked against aerial photos: a wide basin in the south (An der Alster / St. Georg) with Uhlenhorst bulging east and the
   // Alstervorland on the west, then a narrow neck to the north past the Fährhaus point and the Hofweg canal up to the Krugkoppel bridge
-  const SC=3.3, X=xm=>(xm-100)*SC, Y=ym=>-(ym-350)*SC;   // windward mark well away from the northern shore
+  const SC=3.3, X=xm=>(xm-100)*SC, Y=ym=>-(ym-350)*SC+1000;   // windward mark well away from the northern shore
   const M=[
     [-80,0],[-160,120],[-240,300],[-290,500],[-310,700],[-300,900],[-270,1080],[-235,1250],[-210,1450],[-195,1650],[-185,1850],      // west shore, Alstervorland
     [-180,2000],[-190,2200],[-70,2200],[-60,2000],                                                                                    // Krugkoppel bridge, the Alster river to the north
@@ -406,11 +406,35 @@ const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'
 
 // ---------- course ----------
 // course: start, 3 beats to the windward mark, 2 runs through the leeward gate, run to a downwind finish = 7 marks
-const VMAX=62, CH=44, BL=30, PIN={x:-240,y:0}, CB={x:240,y:0}, WM={x:0,y:-2600}, G1={x:-75,y:-330}, G2={x:75,y:-330}, LM={x:0,y:-330}, FA={x:-150,y:-140}, FB={x:150,y:-140};
+const VMAX=62, CH=44, BL=30, PIN={x:-240,y:0}, CB={x:240,y:0};   // start line ends (set per course in newRace); the start line always lies on y = 0, wind from the north
 let ZONE=3*BL;                      // team racing (App. D): 2 hull lengths
-const finLeg=()=>S&&S.team?3:5;     // fleet: 7 marks, team race: 5 marks
-const isUp=leg=>leg%2===0&&leg<finLeg(), isGate=leg=>leg%2===1&&leg<finLeg();
-const legName=l=>isUp(l)?'Beat '+(l/2+1)+' to windward mark':isGate(l)?'Run '+((l+1)/2)+' through leeward gate':'Reach to finish';
+// ---------- courses ----------
+// marks in course order: s = side the mark is left on (-1 port, +1 starboard); a gate is passed downwind between its two marks
+// Fleet race: start – 1 (port) – 2 (port) – gate 3s/3p – upwind finish
+// Team race:  start – 1 (stbd) – 2 (stbd) – 3 (port) – 4 (port) – upwind finish
+const COURSES={
+  fleet:{key:'fleet',pin:{x:360,y:0},cb:{x:840,y:0},marks:[{n:'1',x:616,y:-1840,s:-1},{n:'2',x:-613,y:-1354,s:-1},{n:'3',gate:[{n:'3s',x:-716,y:1503,s:1},{n:'3p',x:-581,y:1503,s:-1}]}],fin:[{x:-572,y:36},{x:-298,y:36}]},
+  team:{key:'team',pin:{x:-738,y:0},cb:{x:-362,y:0},marks:[{n:'1',x:-476,y:-1040,s:1},{n:'2',x:260,y:-1040,s:1},{n:'3',x:410,y:0,s:-1},{n:'4',x:1145,y:0,s:-1}],fin:[{x:1033,y:-1040},{x:1410,y:-1040}]}
+};
+let C=COURSES.fleet;   // the course of the current race
+const unit=(x,y)=>{ const l=Math.hypot(x,y)||1; return [x/l,y/l]; };
+// derived geometry: for every rounding mark the incoming/outgoing directions and the ray on the outside of the corner that a boat crosses when it has rounded
+function setCourse(c){
+  C=c; Object.assign(PIN,c.pin); Object.assign(CB,c.cb);
+  const pts=[{x:(PIN.x+CB.x)/2,y:0}].concat(c.marks.map(m=>m.gate?{x:(m.gate[0].x+m.gate[1].x)/2,y:(m.gate[0].y+m.gate[1].y)/2}:m),[{x:(c.fin[0].x+c.fin[1].x)/2,y:(c.fin[0].y+c.fin[1].y)/2}]);
+  c.pts=pts;
+  c.marks.forEach((m,i)=>{ const A=pts[i], B=pts[i+2]; m.cx=pts[i+1].x; m.cy=pts[i+1].y;
+    const [ax,ay]=unit(A.x-m.cx,A.y-m.cy), [bx,by]=unit(B.x-m.cx,B.y-m.cy); m.din=unit(-ax,-ay); m.dout=[bx,by];
+    let [ox,oy]=unit(-(ax+bx),-(ay+by)); if(Math.hypot(ax+bx,ay+by)<0.05){ ox=-m.din[1]*-(m.s||1); oy=m.din[0]*-(m.s||1); } m.o=[ox,oy]; });
+  c.all=[]; for(const m of c.marks){ if(m.gate) c.all.push(...m.gate); else c.all.push(m); }
+}
+setCourse(COURSES.fleet);
+const finLeg=()=>C.marks.length;
+const legTo=l=>C.pts[Math.min(l+1,C.pts.length-1)], legFrom=l=>C.pts[Math.max(0,Math.min(l,C.pts.length-1))];
+const legKind=l=>{ const a=legFrom(l), b=legTo(l), d=Math.abs(norm(brg(a.x,a.y,b.x,b.y)-(S?S.wbase:0))); return d<60?'beat':d>120?'run':'reach'; };
+const isUp=leg=>leg<=finLeg()&&legKind(leg)==='beat', isGate=leg=>leg<finLeg()&&!!C.marks[leg].gate;
+const legName=l=>{ const k={beat:'Beat',run:'Run',reach:'Reach'}[legKind(l)]; return l>=finLeg()?k+' to the finish':isGate(l)?k+' through gate '+C.marks[l].n:k+' to mark '+C.marks[l].n; };
+const legMarks=l=>l>=finLeg()?[]:C.marks[l].gate?C.marks[l].gate:[C.marks[l]];
 const marksTotal=()=>finLeg()+2;
 const marksDone=b=>(b.started?1:0)+b.leg+(b.done?1:0);
 const TEAMC=['#2f7bf6','#e5463b'], TEAMN=['Blue','Red'];
@@ -509,7 +533,7 @@ function drawLandmark(g,k,col){
   g.restore();
 }
 // side-view shop illustration
-// Real Opti proportions (Wikipedia side plan): boom ≈ 0.85 L, luff ≈ 0.9 L, peak ≈ 1.17 L above the boom and ≈ 0.4 L aft of the mast,
+// Real dinghy proportions (Wikipedia side plan): boom ≈ 0.85 L, luff ≈ 0.9 L, peak ≈ 1.17 L above the boom and ≈ 0.4 L aft of the mast,
 // mast close to the bow. The artwork below is drawn in a reference frame and mapped onto those proportions.
 function drawNatFlag(g,c,x,y,w,h){
   g.save(); g.beginPath(); g.rect(x,y,w,h); g.clip();
@@ -557,7 +581,7 @@ function drawSkinCard(g,W,H,sk,noBg,txt,flag){
   const k=W/100;
   if(!noBg){ g.clearRect(0,0,W,H); const sea=g.createLinearGradient(0,66*k,0,H); sea.addColorStop(0,'#5d8ea8'); sea.addColorStop(1,'#3e6f8a'); g.fillStyle=sea; g.fillRect(0,66*k,W,H); }
   g.save(); g.scale(k,k);
-  g.save(); g.transform(0.719,0,0,0.846,30-30*0.719,9);   // sail frame -> Opti sail: boom 2.0 m, mast top 2.35 m, peak ≈2.8 m above the floor
+  g.save(); g.transform(0.719,0,0,0.846,30-30*0.719,9);   // sail frame -> dinghy sail: boom 2.0 m, mast top 2.35 m, peak ≈2.8 m above the floor
   // sail (sprit rig): tack, throat, peak, clew
   const T=[30,52],Th=[30,13],P=[62,0],C=[88,50];
   g.save(); g.beginPath(); g.moveTo(...T); g.lineTo(...Th); g.quadraticCurveTo(44,4,...P); g.quadraticCurveTo(80,22,...C); g.quadraticCurveTo(58,54,...T); g.closePath();
@@ -594,8 +618,8 @@ function drawSkinCard(g,W,H,sk,noBg,txt,flag){
   g.lineWidth=0.8; g.beginPath(); g.moveTo(30,49); g.lineTo(62,0); g.stroke();                                 // sprit
   g.lineWidth=1.3; g.beginPath(); g.moveTo(30,52); g.lineTo(88,50); g.stroke();                               // boom
   g.restore();
-  { // sail number like on a real Opti: big, two lines (national letters above the number), dark on a light sail
-    const dark=(parseInt((sk.sail[0]||'#fff').slice(1,3),16)<100), t=String(txt||'OPTI'), parts=t.split(' ');
+  { // sail number like on a real dinghy: big, two lines (national letters above the number), dark on a light sail
+    const dark=(parseInt((sk.sail[0]||'#fff').slice(1,3),16)<100), t=String(txt||'T2D'), parts=t.split(' ');
     const y0=sk.burgee?35:(sk.lm?23:30), cx=50;
     g.fillStyle=dark?'rgba(255,255,255,.92)':'rgba(22,40,105,.92)'; g.textAlign='center';
     if(parts.length===2){ // like a real sail: national letters and number on one line, flag below
@@ -646,8 +670,7 @@ let uid=1;
 // stronger wind (long arrows): faster and able to point higher; light wind (short arrows): slower and must sail lower
 const chE=w=>clamp(CH-(w.spd-1)*20,38,50);
 let autoVMG=false, lookMark=true, freeRot=null;   // freeRot: after switching Mark view off, the view stays where it was and you look around from there   // Mark view is on by default (3D)
-function nextMarkOf(b){ if(!b.started||isUp(b.leg)) return WM;   // before the start and on every beat: look at the windward mark
-  if(isGate(b.leg)) return LM; return {x:(FA.x+FB.x)/2,y:FA.y}; }
+function nextMarkOf(b){ return b.started?legTo(b.leg):legTo(0); }   // before the start: the first mark
 function updMarkBtn(){ for(const id of ['bMark','tM']){ const b=document.getElementById(id); if(b){ b.style.background=lookMark?'#5ee0a0':''; b.style.color=lookMark?'#08202d':''; } } }
 function setLuff(on){ if(!S||!running) return; const me=S.boats[0]; me.luff=on; for(const id of ['bLuff','tS']){ const b=document.getElementById(id); if(b){ b.textContent=on?'Sheet in':'Luff'; b.style.background=on?'#ffd23f':''; b.style.color=on?'#08202d':''; } } say(on?'Sail flapping · stopping':'Sheeted in · sailing again',1.4,on?'':'good'); }
 function bestVMGangle(w,up){ let bestA=up?45:150, bestV=-1;
@@ -667,28 +690,34 @@ function makeBoat(o){
 }
 
 // opt: {seed, bots, d, nick, color}
+const botTeamsCount=(opt,myTeam)=>opt.teamBots?(opt.teamBots[0]+opt.teamBots[1]):7;
 function newRace(opt){
   const R=rng(opt.seed);
   const puffs=[];
-  for(let i=0;i<48;i++) puffs.push({i,k:0,x:-1300+R()*2600,y:-3600+R()*4200,r:140+R()*240,s:0.25+R()*0.35,veer:(R()-0.5)*24});
+  for(let i=0;i<48;i++) puffs.push({i,k:0,x:-1300+R()*2600,y:-3000+R()*4800,r:140+R()*240,s:0.25+R()*0.35,veer:(R()-0.5)*24});
   const boats=[];
   const skill=1;   // all levels: computer boats are exactly as fast as your boat; the levels differ only in tactics
-  const myX=-180+Math.random()*360;
   const team=!!opt.team, myTeam=team?(opt.myTeam|0):-1;
-  boats.push(makeBoat({me:true,flag:myFlag||null,gear:Object.assign({},myGear),sailNo:mySailNo||null,skin:team?null:mySkin,name:opt.nick||'You',color:team?TEAMC[myTeam]:SKINS[mySkin].hull,team:myTeam,x:myX,y:300+Math.random()*30,h:Math.random()<0.5?80:-80}));
+  setCourse(team?COURSES.team:COURSES.fleet);
+  { const nb=1+(team?botTeamsCount(opt,myTeam):opt.bots|0), c=(PIN.x+CB.x)/2, len=clamp((nb+1)*BL*1.2,CB.x-PIN.x,1500); PIN.x=c-len/2; CB.x=c+len/2; }   // bigger fleets get a longer start line
+  const SCX=(PIN.x+CB.x)/2, HW=(CB.x-PIN.x)/2, W=C.wait;   // start line centre and half width
+  // team race: everybody starts in the waiting area behind the line
+  const wpos=()=>({x:W.x0+60+Math.random()*(W.x1-W.x0-120),y:W.y0+60+Math.random()*(W.y1-W.y0-120)});
+  const myX=W?wpos().x:SCX-HW*0.75+Math.random()*HW*1.5, myY=W?W.y0+150:300+Math.random()*30;
+  boats.push(makeBoat({me:true,flag:myFlag||null,gear:Object.assign({},myGear),sailNo:mySailNo||null,skin:team?null:mySkin,name:opt.nick||'You',color:team?TEAMC[myTeam]:SKINS[mySkin].hull,team:myTeam,x:myX,y:myY,h:Math.random()<0.5?80:-80}));
   // bot list: fleet = n bots; team = teamBots[0] for blue, teamBots[1] for red
   const botTeams=[]; if(team){ for(let t=0;t<2;t++) for(let i=0;i<(opt.teamBots?opt.teamBots[t]:(t===myTeam?3:4));i++) botTeams.push(t); } else for(let i=0;i<opt.bots;i++) botTeams.push(-1);
   const cnt=[0,0];
   botTeams.forEach((tm,i)=>{
     // big fleets: line up in several rows behind the start line (max. 12 boats per row)
-    const n=botTeams.length, rows=Math.ceil(n/12), row=i%rows, k=Math.floor(i/rows), per=Math.ceil(n/rows), hx=-200+400*(k+0.5)/per+(R()-0.5)*(n>12?14:40), ry=row*55;
+    const n=botTeams.length, rows=Math.ceil(n/Math.max(6,Math.floor(HW*1.66/(BL*1.3)))), row=i%rows, k=Math.floor(i/rows), per=Math.ceil(n/rows), hx=SCX+HW*(-0.83+1.66*(k+0.5)/per)+(R()-0.5)*(n>12?14:40), ry=row*55, wx=W?W.x0+60+R()*(W.x1-W.x0-120):hx, wy=W?W.y0+60+R()*(W.y1-W.y0-120):150+ry+R()*(n>12?40:120);
     const nm=team?(TEAMN[tm]+' '+(++cnt[tm]+(tm===myTeam&&!opt.teamBots?1:0))):NAMES[i%NAMES.length];
-    boats.push(makeBoat({name:nm+(opt.online?' (KI)':''),color:team?TEAMC[tm]:COLORS[i%8],team:tm,x:hx,y:150+ry+R()*(n>12?40:120),h:R()<0.5?70:-70,
+    boats.push(makeBoat({name:nm+(opt.online?' (KI)':''),color:team?TEAMC[tm]:COLORS[i%8],team:tm,x:wx,y:wy,h:R()<0.5?70:-70,
       skill,smart:[2.2,4.6,6.2][opt.d]*(0.95+R()*0.1),side:R()<0.5?1:-1,hold:{x:hx,y:38+ry*0.8+R()*(n>12?12:22)},aimX:(R()-0.5)*120,fx:(R()-0.5)*260}));
   });
   ZONE=(team?2:3)*BL;
   freeRot=null;
-  S={team, myTeam,seedOff:(opt.seed%997)/7, wHist:[], t:-COUNTDOWN, boats, remote:new Map(), puffs, wbase:(R()-0.5)*10, ph1:R()*6, ph2:R()*6, msgs:[], finishers:[], endAt:null, R:rng(opt.seed^0x5f3759df), cam:{x:myX,y:150}, gun:false, contacts:new Map(), online:!!opt.online, lvl:[1,2,3][opt.d|0], tac:[0,2,3][opt.d|0]}; for(const b of boats) b.spawn={x:b.x,y:b.y,h:b.h,v:b.v}; for(const id of ['bLuff','tS']){ const e=document.getElementById(id); if(e){ e.textContent='Luff'; e.style.background=''; e.style.color=''; } }
+  S={team, myTeam,seedOff:(opt.seed%997)/7, wHist:[], t:-COUNTDOWN, boats, remote:new Map(), puffs, wbase:(R()-0.5)*10, ph1:R()*6, ph2:R()*6, msgs:[], finishers:[], endAt:null, R:rng(opt.seed^0x5f3759df), cam:{x:myX,y:myY-150}, gun:false, contacts:new Map(), online:!!opt.online, lvl:[1,2,3][opt.d|0], tac:[0,2,3][opt.d|0]}; for(const b of boats) b.spawn={x:b.x,y:b.y,h:b.h,v:b.v}; for(const id of ['bLuff','tS']){ const e=document.getElementById(id); if(e){ e.textContent='Luff'; e.style.background=''; e.style.color=''; } }
   say(opt.online?'Entry open · 1 minute':'2 minutes to start · racing rules apply',3);
 }
 const allBoats=()=>S.remote.size?S.boats.concat([...S.remote.values()]):S.boats;
@@ -721,7 +750,7 @@ function say(text,dur,kind){S.msgs.push({text,until:performance.now()+dur*1000,k
 // Part 2 rules apply from the 2-minute signal on (start sequence), not only after the gun
 const rulesOn=()=>S&&S.t>=-COUNTDOWN+4&&!(S.grace>S.t);
 const tackSign=(b,wd)=>norm(b.h-wd)>0?1:-1; // +1 = Backbordbug (wind from port), -1 = Steuerbordbug
-function rounding(b,m){return b.started&&!b.done&&(m===WM?isUp(b.leg):(m===G1||m===G2)?isGate(b.leg):false);}
+function rounding(b,m){return b.started&&!b.done&&legMarks(b.leg).includes(m);}
 // who must keep clear between a and b? -> {k: boat, r: rule}
 function rightOfWay(a,b){
   const wd=windAt((a.x+b.x)/2,(a.y+b.y)/2).dir;
@@ -735,13 +764,14 @@ function rightOfWay(a,b){
   if(aT&&!bT) return {k:a,r:'13'};
   if(bT&&!aT) return {k:b,r:'13'};
   // R18 mark-room (not between opposite tacks at the windward mark, R18.1)
-  for(const m of [WM,G1,G2]){
+  for(const m of C.all){
     const da=Math.hypot(a.x-m.x,a.y-m.y), db=Math.hypot(b.x-m.x,b.y-m.y);
     if(da<ZONE&&db<ZONE&&rounding(a,m)&&rounding(b,m)){
-      if(m===WM&&Math.sign(ta)!==Math.sign(tb)) break;
-      const key=m===WM?'W':'G', za=a.zoneT[key], zb=b.zoneT[key];
+      const wmk=isUp(a.leg);   // a mark at the end of a beat: R18 does not apply between boats on opposite tacks, R18.3 applies
+      if(wmk&&Math.sign(ta)!==Math.sign(tb)) break;
+      const key=m.n, za=a.zoneT[key], zb=b.zoneT[key];
       // R18.3: tacked inside the zone at the windward mark -> no mark-room, keep clear
-      if(m===WM){ const aIn=a.tackT>(za??1e9), bIn=b.tackT>(zb??1e9); if(aIn&&!bIn) return {k:a,r:'18.3'}; if(bIn&&!aIn) return {k:b,r:'18.3'}; }
+      if(wmk){ const aIn=a.tackT>(za??1e9), bIn=b.tackT>(zb??1e9); if(aIn&&!bIn) return {k:a,r:'18.3'}; if(bIn&&!aIn) return {k:b,r:'18.3'}; }
       // R18.2(b): the boat that reached the zone first (clear ahead) gets mark-room; otherwise the inside boat
       if(za!=null&&zb!=null&&Math.abs(za-zb)>1.2) return {k:za<zb?b:a,r:'18'};
       return {k:da>db?a:b,r:'18'};
@@ -766,20 +796,29 @@ function penalize(b,turns,rule,other){
 
 // ---------- AI ----------
 function targetOf(b){
-  if(!b.started) return S.gun&&b.y<0?{x:clamp(b.x*0.8,PIN.x+50,CB.x-50),y:70}:{x:clamp(b.aimX,PIN.x+60,CB.x-60),y:-200};   // got above the line without starting: go back below and start properly
-  if(isUp(b.leg)){
-    // just after the gate: go round the chosen gate mark (west mark to starboard, east mark to port) before beating up
-    if(b.gr&&S.t-b.grT<12&&b.y>LM.y-50){ const G=b.gr<0?G1:G2, ox=G.x+b.gr*46;   // first out to below-outside the mark, then up past it
-      return (b.x-ox)*b.gr<-8?{x:ox,y:LM.y+34}:{x:ox,y:LM.y-70}; }
-    if(b.rnd===1) return {x:WM.x-75,y:WM.y-50};          // over the top of the windward mark, then away to the gate
-    if(Math.hypot(b.x-WM.x,b.y-WM.y)<130&&b.x<WM.x+28&&b.y>WM.y-12) return {x:WM.x+48,y:WM.y+26};   // close in on the wrong side: first get to the east of the mark
-    return {x:WM.x+50+Math.abs(b.aimX)*0.03,y:WM.y-42};    // approach on the east side, just above the mark
-  }
-  if(isGate(b.leg)){ const sd=b.aimX<0?-1:1; if(b.y>LM.y+12) b.gUp=true; else if(b.y<LM.y-55) b.gUp=false;   // missed the gate: first back up above it, then through
-    return b.gUp?{x:sd*(G2.x-30),y:LM.y-80}:{x:sd*(G2.x-30),y:LM.y+45}; }   // pass through close to one gate mark
-  // finish: the line has to be crossed from the course side; a boat that is below it first sails back up above the line
-  if(b.y>FA.y+12) b.fUp=true; else if(b.y<FA.y-50) b.fUp=false;
-  return b.fUp?{x:clamp(b.fx,-95,95),y:FA.y-75}:{x:clamp(b.fx,-95,95),y:FA.y+60};
+  if(!b.started) return S.gun&&b.y<0?{x:clamp((PIN.x+CB.x)/2+(b.x-(PIN.x+CB.x)/2)*0.8,PIN.x+50,CB.x-50),y:70}:{x:clamp((PIN.x+CB.x)/2+b.aimX,PIN.x+60,CB.x-60),y:-200};   // got above the line without starting: go back below and start properly
+  // just after a gate: go round the chosen gate mark before sailing on (left mark to starboard, right mark to port)
+  if(b.gr&&b.grM&&S.t-b.grT<12){ const G=b.grM, out=b.gr; const ox=G.x+out*54;
+    if(Math.abs(b.y-G.y)<120) return (b.x-ox)*out<-8?{x:ox,y:G.y+34}:{x:ox,y:G.y-70}; }
+  const L=b.leg;
+  if(L>=finLeg()){   // finish: cross the line from below (upwind finish); a boat that is above it first sails back below
+    const [A,B]=C.fin, fy=(A.y+B.y)/2, cx=clamp((A.x+B.x)/2+b.fx*0.3,Math.min(A.x,B.x)+40,Math.max(A.x,B.x)-40);
+    if(b.y<fy-12&&b.x>Math.min(A.x,B.x)-150&&b.x<Math.max(A.x,B.x)+150) b.fUp=true; else if(b.y>fy+50) b.fUp=false;
+    return b.fUp?{x:cx,y:fy+70}:{x:cx,y:fy-75}; }
+  const m=C.marks[L];
+  if(m.gate){ const [g1,g2]=m.gate, gy=(g1.y+g2.y)/2;
+    // choose the gate mark on the way down: the less crowded one (strong bots look at the traffic, the others pick at random)
+    const dG=Math.hypot(b.x-(g1.x+g2.x)/2,b.y-gy); if(b.gsd==null||b.gsL!==L){ b.gsd=b.aimX<0?0:1; b.gsL=L; b.gsDone=null; }
+    if((b.lvl??S.lvl)>=2&&dG<700&&dG>300&&!b.gsDone){ b.gsDone=L; const cnt=g=>allBoats().filter(o=>o!==b&&!o.done&&o.leg===L&&Math.hypot(o.x-g.x,o.y-g.y)<dG).length, c0=cnt(g1), c1=cnt(g2); b.gsd=c0+(b.aimX<0?0:0.5)<c1+(b.aimX<0?0.5:0)?0:1; }
+    const sd=b.gsd, gm=m.gate[sd], ix=gm.x+(sd?-38:38);   // through the gate close to one gate mark
+    if(b.y>gy+12) b.gUp=true; else if(b.y<gy-55) b.gUp=false;   // missed the gate: first back up above it, then through
+    return b.gUp?{x:ix,y:gy-80}:{x:ix,y:gy+45}; }
+  // a rounding mark: first pass it on the correct side (beside the mark), then sweep round the outside of the corner
+  const side=m.s<0?[-m.din[1],m.din[0]]:[m.din[1],-m.din[0]];   // port rounding: pass the mark on your left = right of it in the direction of travel
+  const along=(b.x-m.x)*m.din[0]+(b.y-m.y)*m.din[1], lat=(b.x-m.x)*side[0]+(b.y-m.y)*side[1];
+  if(along<-60) return {x:m.x+side[0]*45-m.din[0]*15,y:m.y+side[1]*45-m.din[1]*15};   // approach: beside the mark on the side it is left on
+  if(lat<0&&along<20) return {x:m.x+side[0]*55-m.din[0]*45,y:m.y+side[1]*55-m.din[1]*45};   // on the wrong side: go back round
+  return {x:m.x+m.o[0]*48+m.dout[0]*25,y:m.y+m.o[1]*48+m.dout[1]*25};   // round the outside of the corner
 }
 function aiDesired(b,w){
   const tl=-S.t, LV=b.lvl??S.lvl, TC=b.tac??S.tac;
@@ -787,12 +826,16 @@ function aiDesired(b,w){
   if(!S.gun||b.ocs){
     if(b.ocs) return brg(b.x,b.y,b.x*0.9,70);
     const appr=b.y/(VMAX*0.4)+[6,6,5,4.5][LV||0];   // when to pull the sail in and go for the line
-    if(b.y<6&&tl>1.2){ if(!b.me&&!b.remote) b.luff=false; return brg(b.x,b.y,clamp(b.x*0.95,PIN.x+40,CB.x-40),30); }   // too early over the line: dip back just below it, staying between the ends   // too early over (or on) the line before the start: dip back below it
+    if(b.y<6&&tl>1.2){ if(!b.me&&!b.remote) b.luff=false; return brg(b.x,b.y,clamp(b.x*0.95,PIN.x+40,CB.x-40),30); }   // too early over the line: dip back just below it, staying between the ends
     if(tl>appr){
-      let hx=b.hold.x; if(TC>=3){ const fav=norm(S.wbase); if(Math.abs(fav)>2) hx=clamp(hx*0.62+Math.sign(fav)*95,PIN.x+35,CB.x-35); }   // Worlds: wait closer to the favoured end of the line (mean wind)
+      const lc=(PIN.x+CB.x)/2; let hx=b.hold.x; if(TC>=3){ const fav=norm(S.wbase); if(Math.abs(fav)>2) hx=clamp(lc+(hx-lc)*0.62+Math.sign(fav)*95,PIN.x+35,CB.x-35); }
+      if(C.wait&&tl>60){ const W=C.wait; b.parked=false; const wx=clamp(b.x,W.x0+40,W.x1-40), wy=clamp(b.y,W.y0+40,W.y1-40); if(Math.hypot(wx-b.x,wy-b.y)>10) return brg(b.x,b.y,wx,wy); if(!b.me&&!b.remote) b.luff=true; return w.dir+(b.side||1)*90; }   // team race with a waiting area: wait there until one minute before the start
       const hy=b.hold.y+[40,40,15,0][LV||0], dx=hx-b.x, dy=hy-b.y, dd=Math.hypot(dx,dy), bot=!b.me&&!b.remote;
-      // lined up like a real Opti start: on starboard, close-hauled, sail flapping, (almost) stopped just below the line
-      if(dd<30||(b.parked&&dd<45)){ b.parked=true; b.side=-1; if(bot) b.luff=true; return w.dir-50; }
+      // lined up like a real dinghy start: on starboard, close-hauled, sail flapping, (almost) stopped just below the line
+      if(dd<30||(b.parked&&dd<45)){ b.parked=true; b.side=-1;
+        // keep station: a flapping boat drifts back – National/Worlds sheet in briefly to creep forward again
+        if(bot) b.luff=!((b.ns??LV>=2)&&b.y>hy+10&&b.v<VMAX*0.12);
+        return w.dir-50; }
       b.parked=false;
       if(bot) b.luff=dd<110&&b.v>VMAX*0.3;   // slow down on the way to the spot
       const tb=brg(b.x,b.y,hx,hy), rr=norm(tb-w.dir);
@@ -802,7 +845,7 @@ function aiDesired(b,w){
     // final approach: ease the sail (luff) when arriving too early, sheet in to hit the line at the gun
     // keep the sail flapping as long as sheeting in now would get the boat to the line before the gun; Worlds hit the line at the gun at full speed, Club a few lengths late
     if(LV>=1&&!b.me&&!b.remote){ const h=w.dir+b.side*chE(w), Vt=polar(Math.abs(norm(h-w.dir))+(w.spd-1)*20)*VMAX*(0.3+0.7*w.spd)*b.shade*b.skill*Math.max(0.2,Math.cos(h*D2R)), v0=Math.max(0,b.v*Math.cos(b.h*D2R)), e=1-Math.exp(-tl/2), dist=Vt*(tl-2*e)+v0*2*e;
-      b.luff=b.y>2&&dist>b.y-[35,35,14,3][LV]; }
+      b.luff=b.y>2&&dist>b.y-[35,35,14,(b.wm??10)][LV]; }
     { // aim to cross the line between the ends: if close-hauled would pass outside the pin or the committee boat, bear away towards a point inside the line
       const hc=w.dir+b.side*(LV>=1?chE(w):20), sx=Math.sin(hc*D2R), cy=-Math.cos(hc*D2R), xl=cy<-0.05?b.x+sx*(b.y/-cy):b.x;
       if(LV>=1&&(xl<PIN.x+25||xl>CB.x-25)){ const tb=brg(b.x,b.y,clamp(xl,PIN.x+35,CB.x-35),-4); if(Math.abs(norm(tb-w.dir))>=Math.abs(norm(hc-w.dir))) return tb; b.side=-b.side; }
@@ -829,7 +872,7 @@ function aiDesired(b,w){
       if((b.side*sh>(TC>=3?7:12)||(TC<3&&hd>14&&b.side*sh>-2))&&oth<UA+25) want=true; }
     // National / Worlds: get out of dirty air quickly
     if(TC>=1&&b.cool<0&&b.shade<[1,0.8,0.88,0.85][TC]&&S.R()<b.smart*0.08) want=true;
-    if(Math.abs(b.x)>720&&Math.sign(b.x)===Math.sign(Math.sin((w.dir+b.side*UA)*D2R))) { want=true; b.cool=-1; }   // never sail on towards the shore
+    { const hd=(w.dir+b.side*UA)*D2R, ax=b.x+Math.sin(hd)*170, ay=b.y-Math.cos(hd)*170; if(!LAKE.water(ax,ay)||LAKE.dist(ax,ay)<50){ want=true; b.cool=-1; } }   // never sail on towards the shore
     if(want&&b.cool<0){b.side=-b.side;b.tackTo=S.t+4;b.tackW=w.dir;b.cool=(LV>=3?4+S.R()*1.5:LV===2?7+S.R()*1.5:5+S.R()*4);}
     return w.dir+b.side*UA;
   }
@@ -839,7 +882,7 @@ function aiDesired(b,w){
     const cur=Math.abs(norm(w.dir+b.dside*DA-bt)), oth=Math.abs(norm(w.dir-b.dside*DA-bt));
     let gy=cur-oth>18;
     if(TC>=1&&b.cool<0&&Math.hypot(T.x-b.x,T.y-b.y)>[0,280,460,560][TC]){ const L=[0,280,460,560][TC], sc=sd=>{ let v=0; for(const f of [0.5,1]){ const hd=(w.dir+sd*DA)*D2R, w2=windAt(b.x+Math.sin(hd)*L*f,b.y-Math.cos(hd)*L*f); v+=(0.3+0.7*w2.spd)*Math.cos(norm(w2.dir+sd*DA-bt)*D2R); } return v; }; gy=sc(-b.dside)-sc(b.dside)>[0,0.18,0.1,0.06][TC]; }
-    if(Math.abs(b.x)>650&&Math.sign(b.x)===Math.sign(Math.sin((w.dir+b.dside*DA)*D2R))) { gy=true; b.cool=-1; }   // never run out towards the shore
+    { const hd=(w.dir+b.dside*DA)*D2R, ax=b.x+Math.sin(hd)*170, ay=b.y-Math.cos(hd)*170; if(!LAKE.water(ax,ay)||LAKE.dist(ax,ay)<50){ gy=true; b.cool=-1; } }   // never run out towards the shore
     if(gy&&b.cool<0){ b.dside=-b.dside; b.cool=3+S.R()*2; }
     if(Math.abs(rel)>=DA-4) return w.dir+b.dside*DA;
   }
@@ -848,14 +891,14 @@ function aiDesired(b,w){
 }
 function aiSteer(b,w){
   // stuck (e.g. against the shore or a mark): sail back towards the middle of the course for a few seconds
-  if(S.gun&&!b.done){ b.slowT=(b.v<VMAX*0.06)?(b.slowT||0)+1/60:0; if(b.slowT>4||Math.abs(b.x)>880){ if(!(b.rescue>S.t)) b.rescue=S.t+6; b.slowT=0; } }
+  if(S.gun&&!b.done){ b.slowT=(b.v<VMAX*0.06)?(b.slowT||0)+1/60:0; if(b.slowT>4||LAKE.dist(b.x,b.y)<14){ if(!(b.rescue>S.t)) b.rescue=S.t+6; b.slowT=0; } }
   if(b.rescue>S.t){ let best=null, bs=-1e9;   // pick a sailable heading that leads away from the shore and back towards the course
     for(let a=0;a<360;a+=15){ const tw=Math.abs(norm(a-w.dir)); if(tw<55) continue; const px=b.x+Math.sin(a*D2R)*45, py=b.y-Math.cos(a*D2R)*45; if(!LAKE.water(px,py)) continue;
-      const sc=Math.min(LAKE.dist(px,py),120)-Math.hypot(px,py-clamp(b.y,WM.y+300,0))*0.6; if(sc>bs){bs=sc;best=a;} }
+      const T=nextMarkOf(b), sc=Math.min(LAKE.dist(px,py),120)-Math.hypot(px-T.x,py-T.y)*0.15; if(sc>bs){bs=sc;best=a;} }
     const aground=!LAKE.water(b.x,b.y)||LAKE.dist(b.x,b.y)<22;
-    if(best!=null&&Math.abs(b.x)<880&&!aground) return best;   // only a boat that is really aground gets pushed back into open water
-    const dx=-b.x, dy=clamp(b.y,WM.y+300,0)-b.y, dl=Math.hypot(dx,dy)||1; for(let k=1;k<=40;k++){ const nx=b.x+dx/dl*k*3, ny=b.y+dy/dl*k*3; if(LAKE.water(nx,ny)){ b.x+=(nx-b.x)*0.1+dx/dl*1.5; b.y+=(ny-b.y)*0.1+dy/dl*1.5; break; } }
-    if(best!=null) return best; return brg(b.x,b.y,0,clamp(b.y,WM.y+300,0)); }
+    if(best!=null&&!aground) return best;   // only a boat that is really aground gets pushed back into open water
+    const T0=nextMarkOf(b), dx=T0.x-b.x, dy=T0.y-b.y, dl=Math.hypot(dx,dy)||1; for(let k=1;k<=40;k++){ const nx=b.x+dx/dl*k*3, ny=b.y+dy/dl*k*3; if(LAKE.water(nx,ny)){ b.x+=(nx-b.x)*0.1+dx/dl*1.5; b.y+=(ny-b.y)*0.1+dy/dl*1.5; break; } }
+    if(best!=null) return best; return brg(b.x,b.y,T0.x,T0.y); }
   let d=aiDesired(b,w);
   if(!rulesOn()) return d;
   // team racing: cover the nearest opponent behind on the beat (sail the same tack, sit on its wind)
@@ -884,7 +927,7 @@ function aiSteer(b,w){
   if(Math.abs(norm(d-b.h))>50){ let blk=false; for(const o of allBoats()){ if(o===b||o.done) continue; const od=Math.hypot(o.x-b.x,o.y-b.y); if(od<70+15*Math.min(2,S.lvl||0)&&(od<35||Math.abs(norm(brg(b.x,b.y,o.x,o.y)-d))<55)){ blk=true; break; } }   // only boats close by or in the way on the new course
     if(blk){ b.blkT=(b.blkT||0)+1/60; if(b.blkT<((b.lvl??S.lvl)>=3?1.5:3)) d=b.h+clamp(norm(d-b.h),-12,12); } else b.blkT=0; } else b.blkT=0;
   // don't touch marks or the committee boat
-  for(const m of [WM,G1,G2,PIN,CB,FA,FB]){ const r=m===CB?44:26, dd=Math.hypot(m.x-b.x,m.y-b.y); if(dd>r+50) continue;
+  for(const m of [PIN,CB,...C.all,...C.fin]){ const r=(m===CB||m===C.fin[1])?44:26, dd=Math.hypot(m.x-b.x,m.y-b.y); if(dd>r+50) continue;
     const relM=norm(brg(b.x,b.y,m.x,m.y)-b.h), lim=dd<r+18?80:45; if(Math.abs(relM)<lim){ d=b.h-(Math.sign(relM)||1)*45; break; } }
   // never stay head to wind (in irons the boat would drift backwards): bear away onto the nearer tack
   if(!b.luff&&Math.abs(norm(d-w.dir))<38&&Math.abs(norm(b.h-w.dir))<38){ const sd=Math.sign(norm(b.h-w.dir))||b.side; d=w.dir+sd*55; }
@@ -896,7 +939,7 @@ function step(dt){
   S.t+=dt;
   const wdNow=windDir(S.t);
   const dvx=-Math.sin(wdNow*D2R)*26, dvy=Math.cos(wdNow*D2R)*26;
-  for(const p of S.puffs){p.x+=dvx*dt;p.y+=dvy*dt; if(p.y>700){p.y-=4400;p.k++;p.x=-1300+hash(p.i*97+7,p.k*131+3)*2600;}}
+  for(const p of S.puffs){p.x+=dvx*dt;p.y+=dvy*dt; if(p.y>1800){p.y-=4800;p.k++;p.x=-1300+hash(p.i*97+7,p.k*131+3)*2600;}}
   if(!S.gun&&S.t>=0){
     S.gun=true;
     let mine=false;
@@ -952,9 +995,7 @@ function step(dt){
       if(tk&&b.tk&&tk!==b.tk&&Math.abs(tw)<100) b.tackT=S.t;
       if(tk) b.tk=tk;
       if(b.started&&!b.done){
-        const inW=isUp(b.leg)&&Math.hypot(b.x-WM.x,b.y-WM.y)<ZONE, inG=isGate(b.leg)&&(Math.hypot(b.x-G1.x,b.y-G1.y)<ZONE||Math.hypot(b.x-G2.x,b.y-G2.y)<ZONE);
-        if(inW){ if(b.zoneT.W==null) b.zoneT.W=S.t; } else if(isUp(b.leg)) b.zoneT.W=null;
-        if(inG){ if(b.zoneT.G==null) b.zoneT.G=S.t; } else if(isGate(b.leg)) b.zoneT.G=null;
+        for(const m of legMarks(b.leg)){ if(Math.hypot(b.x-m.x,b.y-m.y)<ZONE){ if(b.zoneT[m.n]==null) b.zoneT[m.n]=S.t; } else b.zoneT[m.n]=null; }
       } }
     const twa=Math.abs(norm(b.h-w.dir));
     let target=polar(twa+(w.spd-1)*20)*VMAX*(0.3+0.7*w.spd)*b.shade*b.skill*(b.slowUntil>S.t?SLOW_F:1);
@@ -978,22 +1019,21 @@ function step(dt){
       else if(b.prevY>0&&b.y<=0&&inLine){b.started=true;}
     }
     if(b.started&&!b.done){
-      // R28: leave the windward mark to port = pass it on its starboard (east) side
-      // a proper rounding: pass the mark on its east side going up, then cross over the top of it to the west
-      if(isUp(b.leg)&&b.prevY>=WM.y&&b.y<WM.y){
-        if(b.x>WM.x&&b.x<WM.x+260) b.rnd=1;
-        else if(b.x<=WM.x&&b.x>WM.x-160&&b.me) say('R28 · Leave the windward mark to port!',2.6,'bad');
-      }
-      if(isUp(b.leg)&&b.rnd===1){
-        if(b.x<WM.x-6&&b.y<WM.y+30){ b.rnd=0; b.leg++; b.zoneT.W=null; if(b.me) say('Windward mark rounded · '+marksDone(b)+'/'+marksTotal(),1.8,'good'); }
-        else if(b.y>WM.y+40) b.rnd=0;   // went back below the mark without going round it
-      }
-      else if(isGate(b.leg)&&b.prevY<LM.y&&b.y>=LM.y&&b.x>G1.x-6&&b.x<G2.x+6){b.leg++; b.zoneT.G=null; b.gr=b.x<LM.x?-1:1; b.grT=S.t; if(b.me) say('Leeward gate passed · '+marksDone(b)+'/'+marksTotal(),1.8,'good');}
-      else if(b.leg===finLeg()&&b.prevY<FA.y&&b.y>=FA.y&&b.x>FA.x&&b.x<FB.x){
-        b.done=true;b.t=S.t;
-        if(b.me) say('Finished!',3,'good');
-        S.finishers.push(b);
-      }
+      // R28: sail the course – each mark left on its side, through the gate, then across the finish line
+      const L=b.leg, vx=b.x-b.prevX, vy=b.y-b.prevY;
+      if(L<finLeg()){ const m=C.marks[L];
+        if(m.gate){ const [g1,g2]=m.gate, gy=(g1.y+g2.y)/2;
+          if(b.prevY<gy&&b.y>=gy&&b.x>Math.min(g1.x,g2.x)-6&&b.x<Math.max(g1.x,g2.x)+6){ b.leg++; const gl=Math.abs(b.x-g1.x)<Math.abs(b.x-g2.x)?g1:g2; b.grM=gl; b.gr=gl===g1?-1:1; b.grT=S.t; if(b.me) say('Gate '+m.n+' passed · '+marksDone(b)+'/'+marksTotal(),1.8,'good'); } }
+        else { const px=b.prevX-m.x, py=b.prevY-m.y, rx=b.x-m.x, ry=b.y-m.y, s1=m.o[0]*py-m.o[1]*px, s2=m.o[0]*ry-m.o[1]*rx, along=rx*m.o[0]+ry*m.o[1];
+          if(s1*s2<0&&along>0&&along<340){ const rot=rx*vy-ry*vx;
+            if(Math.sign(rot)===m.s){ b.leg++; b.rq=null; b.zoneT[m.n]=null; if(b.me) say('Mark '+m.n+' rounded · '+marksDone(b)+'/'+marksTotal(),1.8,'good'); }
+            else if(b.me) say('R28 · Leave mark '+m.n+' to '+(m.s<0?'port':'starboard')+'!',2.6,'bad'); } } }
+      else { const [A,B]=C.fin, fy=(A.y+B.y)/2;
+        if(b.prevY>=fy&&b.y<fy&&b.x>Math.min(A.x,B.x)&&b.x<Math.max(A.x,B.x)){
+          b.done=true;b.t=S.t;
+          if(b.me) say('Finished!',3,'good');
+          S.finishers.push(b);
+        } }
     }
   }
   // contact, marks and rules
@@ -1023,12 +1063,12 @@ function step(dt){
       }
     }
     if(a.remote) continue;
-    for(const m of [PIN,CB,WM,G1,G2,FA,FB]){
-      const r=m===CB?30:18, dx=a.x-m.x,dy=a.y-m.y,d=Math.hypot(dx,dy);
+    for(const m of [PIN,CB,...C.all,...C.fin]){
+      const r=(m===CB||m===C.fin[1])?30:18, dx=a.x-m.x,dy=a.y-m.y,d=Math.hypot(dx,dy);
       if(d<r&&d>0.01){
         a.x=m.x+dx/d*r;a.y=m.y+dy/d*r;a.v*=0.97;
         const key='m'+a.id+'-'+m.x+m.y;
-        const nextM=!a.started?(m===PIN||m===CB):isUp(a.leg)?(m===WM):isGate(a.leg)?(m===G1||m===G2):(m===FA||m===FB);   // the next mark counts; start buoy and committee boat always count
+        const nextM=!a.started?(m===PIN||m===CB):a.leg>=finLeg()?C.fin.includes(m):legMarks(a.leg).includes(m);   // the next mark counts; start buoy and committee boat always count
         if(rulesOn()&&!a.done&&(nextM||m===PIN||m===CB)&&!(S.contacts.get(key)>now)){S.contacts.set(key,now+5); penalize(a,1,'31');}
       }
     }
@@ -1051,7 +1091,7 @@ function pushWake(b){
 function progress(b){
   if(b.done) return (b.dsq?5e5:1e6)-b.t;
   if(!b.started) return -b.y-1e4;
-  const T=isUp(b.leg)?WM:isGate(b.leg)?LM:{x:0,y:FA.y};
+  const T=legTo(b.leg);
   return b.leg*5000-Math.hypot(b.x-T.x,b.y-T.y);
 }
 
@@ -1275,35 +1315,47 @@ function drawBuoy(x,y,r,col,label){
   ctx.fillStyle='rgba(255,255,255,.55)'; ctx.beginPath(); ctx.arc(x-r*0.35,y-r*0.35,r*0.35,0,7); ctx.fill();
   if(label){ctx.fillStyle='rgba(234,244,247,.85)';ctx.font='600 11px "Chivo Mono", ui-monospace, monospace';ctx.textAlign='center';ctx.fillText(label,x,y+r+16);}
 }
-function drawCourse(me){
-  const wd=windAt(WM.x,WM.y).dir;
-  ctx.save(); ctx.setLineDash([10,8]); ctx.lineWidth=2;
-  ctx.strokeStyle=S.gun?'rgba(234,244,247,.35)':'rgba(255,210,63,.75)';
-  ctx.beginPath(); ctx.moveTo(PIN.x,PIN.y); ctx.lineTo(CB.x,CB.y); ctx.stroke(); ctx.restore();
-  // 3-length zones
-  ctx.save(); ctx.setLineDash([3,7]); ctx.strokeStyle='rgba(255,210,63,.22)'; ctx.lineWidth=1.2;
-  for(const m of [WM,G1,G2]){ctx.beginPath(); ctx.arc(m.x,m.y,ZONE,0,7); ctx.stroke();
-    if(me&&rounding(me,m)&&Math.hypot(me.x-m.x,me.y-m.y)<ZONE*1.6){ctx.fillStyle='rgba(170,230,120,.38)'; ctx.fill();}}
-  ctx.restore();
-  ctx.save(); ctx.translate(CB.x+10,CB.y); ctx.rotate(wd*D2R);
+function drawCommittee(x,y,wd,flagCol){
+  ctx.save(); ctx.translate(x,y); ctx.rotate(wd*D2R);
   ctx.fillStyle='rgba(0,0,0,.25)'; ctx.fillRect(-12,-28,28,62);
   ctx.fillStyle='#f3f1ea'; ctx.beginPath(); ctx.moveTo(0,-34); ctx.quadraticCurveTo(14,-20,13,30); ctx.lineTo(-13,30); ctx.quadraticCurveTo(-14,-20,0,-34); ctx.fill();
   ctx.fillStyle='#24323a'; ctx.fillRect(-8,-6,16,18);
-  ctx.fillStyle=S.gun?'#2f7bf6':'#ff6b2c'; ctx.fillRect(4,-26,10,7);
+  ctx.fillStyle=flagCol; ctx.fillRect(4,-26,10,7);
   ctx.restore();
-  drawBuoy(PIN.x,PIN.y,9,'#ff6b2c','PIN');
-  drawBuoy(WM.x,WM.y,11,'#ffd23f','WINDWARD');
-  for(const g of [G1,G2]) drawFlag(g.x,g.y);
-  ctx.fillStyle='rgba(234,244,247,.85)'; ctx.font='600 11px "Chivo Mono", ui-monospace, monospace'; ctx.textAlign='center'; ctx.fillText('LEEWARD GATE',LM.x,LM.y+30);
-  ctx.save(); ctx.setLineDash([12,6]); ctx.strokeStyle='rgba(120,230,140,.8)'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(FA.x,FA.y); ctx.lineTo(FB.x,FB.y); ctx.stroke(); ctx.restore();
-  drawBuoy(FA.x,FA.y,8,'#3fbf6a',''); drawBuoy(FB.x,FB.y,8,'#3fbf6a','FINISH');
-  if(showLay&&me&&(isUp(me.leg)||!me.started)){
+}
+function drawCourse(me){
+  const nm=me?nextMarkOf(me):legTo(0), wd=windAt(nm.x,nm.y).dir;
+  // waiting area (team race): boats stay here until one minute before the start
+  if(C.wait){ const W=C.wait; ctx.save(); ctx.setLineDash([6,8]); ctx.strokeStyle='rgba(234,244,247,.35)'; ctx.lineWidth=1.5; ctx.strokeRect(W.x0,W.y0,W.x1-W.x0,W.y1-W.y0); ctx.restore();
+    drawBuoy(W.x0,W.y0,7,'#e5463b',''); drawBuoy(W.x1,W.y0,7,'#e5463b','');
+    ctx.fillStyle='rgba(234,244,247,.6)'; ctx.font='600 12px "Chivo Mono", ui-monospace, monospace'; ctx.textAlign='center'; ctx.fillText('WAITING AREA',(W.x0+W.x1)/2,(W.y0+W.y1)/2); }
+  ctx.save(); ctx.setLineDash([10,8]); ctx.lineWidth=2;
+  ctx.strokeStyle=S.gun?'rgba(234,244,247,.35)':'rgba(255,210,63,.75)';
+  ctx.beginPath(); ctx.moveTo(PIN.x,PIN.y); ctx.lineTo(CB.x,CB.y); ctx.stroke(); ctx.restore();
+  // zones
+  ctx.save(); ctx.setLineDash([3,7]); ctx.strokeStyle='rgba(255,210,63,.22)'; ctx.lineWidth=1.2;
+  for(const m of C.all){ctx.beginPath(); ctx.arc(m.x,m.y,ZONE,0,7); ctx.stroke();
+    if(me&&rounding(me,m)&&Math.hypot(me.x-m.x,me.y-m.y)<ZONE*1.6){ctx.fillStyle='rgba(170,230,120,.38)'; ctx.fill();}}
+  ctx.restore();
+  drawCommittee(CB.x+10,CB.y,wd,S.gun?'#2f7bf6':'#ff6b2c');
+  drawBuoy(PIN.x,PIN.y,9,'#ff6b2c','START');
+  // course marks with their number; an arc shows the side they are rounded on
+  for(const m of C.marks){
+    if(m.gate){ for(const g of m.gate){ drawBuoy(g.x,g.y,10,'#e5463b',g.n.toUpperCase()); } continue; }
+    drawBuoy(m.x,m.y,11,'#e5463b','');
+    ctx.fillStyle='#fff'; ctx.font='700 12px "Chivo Mono", ui-monospace, monospace'; ctx.textAlign='center'; ctx.fillText(m.n,m.x,m.y+4);
+    const nxt=me&&me.started&&!me.done&&me.leg===C.marks.indexOf(m);
+    ctx.save(); ctx.strokeStyle=nxt?'rgba(255,210,63,.75)':'rgba(255,210,63,.3)'; ctx.lineWidth=2;
+    const a0=Math.atan2(-m.din[1],-m.din[0]), a1=Math.atan2(m.dout[1],m.dout[0]); ctx.beginPath(); ctx.arc(m.x,m.y,34,a0,a1,m.s<0); ctx.stroke(); ctx.restore(); }
+  // finish line: blue buoy and committee boat with a blue flag
+  const [FA,FB]=C.fin;
+  ctx.save(); ctx.setLineDash([12,6]); ctx.strokeStyle='rgba(120,180,255,.85)'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(FA.x,FA.y); ctx.lineTo(FB.x,FB.y); ctx.stroke(); ctx.restore();
+  drawBuoy(FA.x,FA.y,8,'#2f7bf6','FINISH'); drawCommittee(FB.x+10,FB.y,wd,'#2f7bf6');
+  if(showLay&&me&&(isUp(me.leg)||!me.started)){ const T=nextMarkOf(me);
     ctx.save(); ctx.setLineDash([4,10]); ctx.strokeStyle='rgba(255,210,63,.4)'; ctx.lineWidth=1.5;
-    for(const s of [-1,1]){const a=(wd+180+s*chE(windAt(WM.x,WM.y)))*D2R; ctx.beginPath(); ctx.moveTo(WM.x,WM.y); ctx.lineTo(WM.x+Math.sin(a)*4000,WM.y-Math.cos(a)*4000); ctx.stroke();}
+    for(const s of [-1,1]){const a=(wd+180+s*chE(windAt(T.x,T.y)))*D2R; ctx.beginPath(); ctx.moveTo(T.x,T.y); ctx.lineTo(T.x+Math.sin(a)*4000,T.y-Math.cos(a)*4000); ctx.stroke();}
     ctx.restore();
   }
-  ctx.strokeStyle='rgba(255,210,63,.5)'; ctx.lineWidth=2;
-  ctx.beginPath(); ctx.arc(WM.x,WM.y,34,Math.PI*0.9,Math.PI*1.9+0.3,false); ctx.stroke();
 }
 function hullPath(L,B,g){
   const ctx_=ctx; if(g) ctx=g;
@@ -1482,13 +1534,14 @@ function drawHUD(me,rank,total){
     ctx.fillStyle='rgba(5,28,41,.72)'; roundRect(VW/2-bw/2,by,bw,26,5); ctx.fill();
     ctx.fillStyle='#eaf4f7'; ctx.textAlign='center'; ctx.fillText(txt,VW/2,by+17); } }
   // minimap
-  const mmH=VW<700?Math.min(120,VH*0.18):Math.min(170,VH*0.26), mmW=mmH*0.55, mx=VW-mmW-14, my=VW<700?top+214:VH-mmH-16;
+  let bx0=Math.min(PIN.x,...C.all.map(m=>m.x),...C.fin.map(m=>m.x)), bx1=Math.max(CB.x,...C.all.map(m=>m.x),...C.fin.map(m=>m.x)), by0=Math.min(...C.all.map(m=>m.y),...C.fin.map(m=>m.y),0), by1=Math.max(...C.all.map(m=>m.y),0)+150;
+  const mmH=VW<700?Math.min(120,VH*0.18):Math.min(170,VH*0.26), mmW=clamp(mmH*(bx1-bx0+300)/(by1-by0+300),mmH*0.45,mmH*1.4), mx=VW-mmW-14, my=VW<700?top+214:VH-mmH-16;
   ctx.fillStyle='rgba(5,28,41,.72)'; roundRect(mx,my,mmW,mmH,5); ctx.fill();
-  const sc=(mmH-24)/(-WM.y+600), ox=mx+mmW/2, oy=my+12+(-WM.y+300)*sc;
-  const P=(x,y)=>[ox+clamp(x,-mmW/2/sc+4,mmW/2/sc-4)*sc,oy+y*sc];
+  const sc=Math.min((mmH-24)/(by1-by0+150),(mmW-16)/(bx1-bx0+150)), ox=mx+mmW/2-(bx0+bx1)/2*sc, oy=my+mmH/2-(by0+by1)/2*sc;
+  const P=(x,y)=>[clamp(ox+x*sc,mx+4,mx+mmW-4),clamp(oy+y*sc,my+4,my+mmH-4)];
   ctx.strokeStyle='rgba(234,244,247,.5)'; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(...P(PIN.x,0)); ctx.lineTo(...P(CB.x,0)); ctx.stroke();
-  ctx.fillStyle='#ffd23f'; for(const m of [WM,G1,G2]){const [a,b]=P(m.x,m.y); ctx.beginPath(); ctx.arc(a,b,2.5,0,7); ctx.fill();}
-  ctx.strokeStyle='rgba(120,230,140,.9)'; ctx.beginPath(); ctx.moveTo(...P(FA.x,FA.y)); ctx.lineTo(...P(FB.x,FB.y)); ctx.stroke();
+  ctx.fillStyle='#e5463b'; for(const m of C.all){const [a,b]=P(m.x,m.y); ctx.beginPath(); ctx.arc(a,b,2.5,0,7); ctx.fill();}
+  ctx.strokeStyle='rgba(120,180,255,.95)'; ctx.beginPath(); ctx.moveTo(...P(C.fin[0].x,C.fin[0].y)); ctx.lineTo(...P(C.fin[1].x,C.fin[1].y)); ctx.stroke();
   for(const b of allBoats()){const [a,c]=P(b.x,b.y); ctx.fillStyle=b.color; ctx.beginPath(); ctx.arc(a,c,b.me?3.5:2.4,0,7); ctx.fill(); if(b.me){ctx.strokeStyle='#fff';ctx.stroke();}}
   // messages
   const now=performance.now(); S.msgs=S.msgs.filter(m=>m.until>now);
@@ -1496,7 +1549,7 @@ function drawHUD(me,rank,total){
   if(m){ctx.textAlign='center'; { let fs=VW<500?24:34; ctx.font='900 '+fs+'px '+DISP; const tw=ctx.measureText(m.text.toUpperCase()).width; if(tw>VW-24){ fs=Math.max(12,Math.floor(fs*(VW-24)/tw)); ctx.font='900 '+fs+'px '+DISP; } } ctx.fillStyle='rgba(0,0,0,.35)'; ctx.fillText(m.text.toUpperCase(),VW/2+2,VH*0.3+2);
     ctx.fillStyle=m.kind==='bad'?'#ff6b2c':m.kind==='good'?'#5ee0a0':'#ffffff'; ctx.fillText(m.text.toUpperCase(),VW/2,VH*0.3);}
   if(me.started&&!me.done&&!view3d){
-    const T=isUp(me.leg)?WM:isGate(me.leg)?LM:{x:0,y:FA.y};
+    const T=nextMarkOf(me);
     const z=zoom(), sx=VW/2+(T.x-S.cam.x)*z, sy=VH/2+(T.y-S.cam.y)*z;
     if(sx<0||sx>VW||sy<0||sy>VH){
       const ang=Math.atan2(sy-VH/2,sx-VW/2), R=Math.min(VW/2-40,VH/2-40), ex=VW/2+Math.cos(ang)*R, ey=VH/2+Math.sin(ang)*R;
@@ -1755,32 +1808,34 @@ T3=window.T3=(function(){
   function buildMarks(){
     marks=new THREE_.Group(); scene.add(marks);
     const yel=new THREE_.MeshLambertMaterial({color:'#ffd23f'});
-    const wm=new THREE_.Mesh(new THREE_.CylinderGeometry(9,9,24,20),yel); wm.position.copy(P(WM.x,WM.y,12)); marks.add(wm);
-    for(const m of [G1,G2]){ const c=new THREE_.Mesh(new THREE_.ConeGeometry(10,28,3),yel); c.position.copy(P(m.x,m.y,14)); marks.add(c); }
+    const red=new THREE_.MeshLambertMaterial({color:'#e5463b'});
+    for(const m of C.all){ const c=new THREE_.Mesh(new THREE_.CylinderGeometry(9,9,24,20),red); c.position.copy(P(m.x,m.y,12)); marks.add(c); }
+    if(C.wait){ const W=C.wait; for(const x of [W.x0,W.x1]){ const c=new THREE_.Mesh(new THREE_.SphereGeometry(7,12,10),red); c.position.copy(P(x,W.y0,4)); marks.add(c); } }
     const pin=new THREE_.Mesh(new THREE_.SphereGeometry(9,16,12),new THREE_.MeshLambertMaterial({color:'#ff6b2c'})); pin.position.copy(P(PIN.x,PIN.y,5)); marks.add(pin);
-    for(const m of [FA,FB]){ const f=new THREE_.Mesh(new THREE_.SphereGeometry(8,16,12),new THREE_.MeshLambertMaterial({color:'#3fbf6a'})); f.position.copy(P(m.x,m.y,4)); marks.add(f); }
+    { const f=new THREE_.Mesh(new THREE_.SphereGeometry(8,16,12),new THREE_.MeshLambertMaterial({color:'#2f7bf6'})); f.position.copy(P(C.fin[0].x,C.fin[0].y,4)); marks.add(f); }
     // committee boat
     const cb=new THREE_.Group(); const hullM=new THREE_.Mesh(new THREE_.BoxGeometry(26,8,64),new THREE_.MeshLambertMaterial({color:'#f3f1ea'})); hullM.position.y=4; cb.add(hullM);
     const cab=new THREE_.Mesh(new THREE_.BoxGeometry(18,10,20),new THREE_.MeshLambertMaterial({color:'#24323a'})); cab.position.set(0,13,4); cb.add(cab);
     const mast=new THREE_.Mesh(new THREE_.CylinderGeometry(0.6,0.6,30),new THREE_.MeshLambertMaterial({color:'#bbb'})); mast.position.set(0,30,0); cb.add(mast);
     cb.flag=new THREE_.Mesh(new THREE_.PlaneGeometry(10,7),new THREE_.MeshBasicMaterial({color:'#ff6b2c',side:THREE_.DoubleSide})); cb.flag.position.set(5,40,0); cb.add(cb.flag);
     cb.position.copy(P(CB.x+12,CB.y,0)); marks.add(cb); marks.cb=cb;
+    const cb2=cb.clone(); cb2.position.copy(P(C.fin[1].x+12,C.fin[1].y,0)); cb2.children[cb2.children.length-1].material=new THREE_.MeshBasicMaterial({color:'#2f7bf6',side:THREE_.DoubleSide}); marks.add(cb2);
     const dl=(a,b,col)=>{ const geo=new THREE_.BufferGeometry().setFromPoints([P(a.x,a.y,1),P(b.x,b.y,1)]); const l=new THREE_.Line(geo,new THREE_.LineDashedMaterial({color:col,dashSize:10,gapSize:8})); l.computeLineDistances(); marks.add(l); return l; };
-    marks.start=dl(PIN,CB,'#ffd23f'); dl(FA,FB,'#78e68c');
+    marks.start=dl(PIN,CB,'#ffd23f'); dl(C.fin[0],C.fin[1],'#78b4ff'); marks.key=C.key+PIN.x+CB.x;
     lay=new THREE_.LineSegments(new THREE_.BufferGeometry().setFromPoints([P(0,0),P(0,0),P(0,0),P(0,0)]),new THREE_.LineDashedMaterial({color:'#ffd23f',dashSize:6,gapSize:12,transparent:true,opacity:0.6})); scene.add(lay);
   }
   function rebuildZones(){
     for(const z of zoneRings) scene.remove(z); zoneRings=[];
-    for(const m of [WM,G1,G2]){ const rg=new THREE_.Mesh(new THREE_.RingGeometry(ZONE-1.5,ZONE,72),new THREE_.MeshBasicMaterial({color:'#ffd23f',transparent:true,opacity:0.35,side:THREE_.DoubleSide})); rg.rotation.x=-Math.PI/2; rg.position.copy(P(m.x,m.y,0.8)); rg.mark=m; scene.add(rg);
+    for(const m of C.all){ const rg=new THREE_.Mesh(new THREE_.RingGeometry(ZONE-1.5,ZONE,72),new THREE_.MeshBasicMaterial({color:'#ffd23f',transparent:true,opacity:0.35,side:THREE_.DoubleSide})); rg.rotation.x=-Math.PI/2; rg.position.copy(P(m.x,m.y,0.8)); rg.mark=m; scene.add(rg);
       const disc=new THREE_.Mesh(new THREE_.CircleGeometry(ZONE,72),new THREE_.MeshBasicMaterial({color:'#aae678',transparent:true,opacity:0.32})); disc.rotation.x=-Math.PI/2; disc.position.copy(P(m.x,m.y,0.5)); disc.mark=m; disc.isDisc=true; scene.add(disc); zoneRings.push(rg,disc); }
-    lastZone=ZONE;
+    lastZone=ZONE+C.key;
   }
-  // ---- Optimist model (2.31 m x 1.13 m pram, sprit rig), 1 m = 13 units
+  // ---- dinghy model (2.31 m x 1.13 m pram, sprit rig), 1 m = 13 units
   const L=BL, Bm=14.7, DEPTH=4.6, MASTZ=-L/2+3.4;   // 2.30 m x 1.13 m, freeboard ≈ 0.35 m, mast 0.26 m behind the bow transom
   const halfW=s=>Bm/2*(s<0.55?0.6+0.4*Math.sin(s/0.55*Math.PI/2):1-0.1*Math.pow((s-0.55)/0.45,2));   // narrow bow transom, widest aft of midships, wide stern
   function skinFor(b){ const sk=skinOf(b); if(sk) return sk; return {key:b.color,hull:[b.color,b.color],deck:'#f4efe4',rim:'#ffffff',hp:'pin',hc:'#ffffff',sail:['#fbfbf8','#eceee9'],sp:'band',sc:b.color,price:0,n:b.color}; }
   function texFor(sk,txt,flag){
-    const k=sk.n+'|'+sk.hull[0]+'|'+(txt||'OPTI')+'|'+(flag||''); if(texCache.has(k)) return texCache.get(k);
+    const k=sk.n+'|'+sk.hull[0]+'|'+(txt||'T2D')+'|'+(flag||''); if(texCache.has(k)) return texCache.get(k);
     const c=document.createElement('canvas'); c.width=512; c.height=369; const g=c.getContext("2d"); drawSkinCard(g,512,369,sk,true,txt,flag);
     // close every gap in the texture: hull band and sail area must be fully opaque, otherwise the 3D hull shows holes
     { const k=512/100; g.save(); g.globalCompositeOperation='destination-over';
@@ -1829,7 +1884,7 @@ T3=window.T3=(function(){
     const til=new THREE_.Mesh(new THREE_.BoxGeometry(0.6,0.6,9.75),wood); til.position.set(0,DEPTH+0.8,L/2-3.5); til.rotation.x=0.08; grp.add(til);   // tiller 750 mm
     const dag=new THREE_.Mesh(new THREE_.BoxGeometry(0.25,13.9,3.7),foil); dag.position.set(0,-2,0.2); grp.add(dag);   // daggerboard 1067 x 285 mm
     const blk=new THREE_.Mesh(new THREE_.CylinderGeometry(0.9,0.9,0.9,12),new THREE_.MeshPhongMaterial({color:'#1b1d21',shininess:80})); blk.rotation.z=Math.PI/2; blk.position.set(0,2.4,L/2-10.9); grp.add(blk);   // mainsheet block 786-894 mm from the aft transom
-    // Layout like a real racing Opti (top view: bow up): mast thwart near the bow, two side bags in the forward half,
+    // Layout like a real racing dinghy (top view: bow up): mast thwart near the bow, two side bags in the forward half,
     // centre thwart with the daggerboard case, one bag across the stern, black V-shaped hiking strap, grey floor
     const bagM=GEAR.b[gear.b].m?gearMat(GEAR.b[gear.b]):new THREE_.MeshPhongMaterial({color:GEAR.b[gear.b].c,shininess:35,specular:0x333333}), bandM=new THREE_.MeshLambertMaterial({color:'#15171a'});
     const deckM=new THREE_.MeshLambertMaterial({color:sk.deck});
@@ -2174,7 +2229,8 @@ T3=window.T3=(function(){
   }
   M.render=function(me){
     if(M.alsterAnim) M.alsterAnim(S.t);
-    if(lastZone!==ZONE) rebuildZones();
+    if(marks&&marks.key!==C.key+PIN.x+CB.x){ scene.remove(marks); scene.remove(lay); buildMarks(); }
+    if(lastZone!==ZONE+C.key) rebuildZones();
     const all=allBoats(), seen=new Set();
     for(const b of all){
       const sk=skinFor(b); let o=boats.get(b.id);
@@ -2211,8 +2267,8 @@ T3=window.T3=(function(){
     for(const z of zoneRings){ if(z.isDisc) z.visible=rounding(me,z.mark)&&Math.hypot(me.x-z.mark.x,me.y-z.mark.y)<ZONE*1.6; }
     marks.cb.flag.material.color.set(S.gun?'#2f7bf6':'#ff6b2c'); marks.start.material.color.set(S.gun?'#dfe9ee':'#ffd23f');
     // laylines
-    const lw=windAt(WM.x,WM.y).dir, arr=lay.geometry.attributes.position.array, show=showLay&&(isUp(me.leg)||!me.started);
-    lay.visible=show; if(show){ let n=0; for(const sg of [-1,1]){ const an=(lw+180+sg*chE(windAt(WM.x,WM.y)))*D2R; arr[n++]=WM.x;arr[n++]=1;arr[n++]=WM.y; arr[n++]=WM.x+Math.sin(an)*4000;arr[n++]=1;arr[n++]=WM.y-Math.cos(an)*4000; } lay.geometry.attributes.position.needsUpdate=true; lay.computeLineDistances(); }
+    const LT=nextMarkOf(me), lw=windAt(LT.x,LT.y).dir, arr=lay.geometry.attributes.position.array, show=showLay&&(isUp(me.leg)||!me.started);
+    lay.visible=show; if(show){ let n=0; for(const sg of [-1,1]){ const an=(lw+180+sg*chE(windAt(LT.x,LT.y)))*D2R; arr[n++]=LT.x;arr[n++]=1;arr[n++]=LT.y; arr[n++]=LT.x+Math.sin(an)*4000;arr[n++]=1;arr[n++]=LT.y-Math.cos(an)*4000; } lay.geometry.attributes.position.needsUpdate=true; lay.computeLineDistances(); }
     // chase camera
     const mk=lookMark&&!me.done?nextMarkOf(me):null;   // Mark view: camera turns with the bearing to the next mark
     const yaw=mk?camRot:camRot+M.yaw, pitch=clamp(0.5+M.pitch,0.08,1.35), dist=190/userZoom;
@@ -2262,7 +2318,7 @@ const DIFF=["Club","National","Worlds"];
 function bestKey(){return 'std-best-'+settings.d;}
 function showBest(){try{const v=JSON.parse(localStorage.getItem(bestKey())||'null'); $('best').textContent=v?('Best practice ('+DIFF[settings.d]+'): '+ordN(v.p)+' place · '+fmt(v.t)):'';}catch(e){$('best').textContent='';}}
 $('segD').addEventListener('click',showBest); showBest();
-// Opti Team Race: the number of boats is fixed (4 against 4), only the level can be chosen
+// dinghy Team Race: the number of boats is fixed (4 against 4), only the level can be chosen
 function updModeRow(){ const team=settings.m===1; $('segN').hidden=team; const l=$('practiceLbl'); if(l) l.textContent=team?'Level of the computer boats':'Opponents and level of the computer boats'; }
 $('segM').addEventListener('click',updModeRow); updModeRow();
 // full screen button (website embed): opens the game in its own tab and starts the race right away with the chosen settings
