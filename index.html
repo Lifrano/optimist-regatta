@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><script>window.OPTI_WEB=true</script></head><body style="margin:0">
-<title>Optimist Regatta</title>
+<title>Opti Regatta</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=Chivo:wght@400;600;700&family=Chivo+Mono:wght@500;700&display=swap">
 <style>
@@ -148,8 +148,8 @@ select.txt{appearance:auto}
 
 <div class="overlay" id="menu">
   <div class="card">
-    <p class="tag m-hide fit-drop" data-p="6">Optimist · Up &amp; Down · 2 laps</p>
-    <h1 class="wordmark">Optimist<br><span>Regatta</span></h1>
+    <p class="tag m-hide fit-drop" data-p="6">Opti · Up &amp; Down · 2 laps</p>
+    <h1 class="wordmark">Opti<br><span>Regatta</span></h1>
     <p class="tag m-by fit-drop" data-p="11">developed by Train to Dominate · Florian Stindt</p>
     <p class="lead m-hide fit-drop" data-p="2">Beat to the windward mark, play the shifts and gusts, follow the racing rules and be first across the finish line.</p>
     <div class="row no-web fit-drop" data-p="10"><span class="lbl">Your boat</span><canvas id="skinPrev" aria-label="3D preview of your Opti" hidden></canvas><canvas id="skinPrev2" aria-label="Preview of your Opti"></canvas></div>
@@ -281,7 +281,8 @@ select.txt{appearance:auto}
     <div class="tw"><table class="res" id="rankTable"></table></div>
     <p class="tag">Per online race against other players only (no computer boats): 1st = 3 points, 2nd = 2, 3rd = 1. Add friends after an online race from the results list with “+ Friend”.</p>
     <p class="note" id="rankNote"></p>
-    <div class="row"><button class="go" id="bRankOk" type="button">Close</button></div>
+    <div class="row"><button class="go" id="bRankOk" type="button">Close</button><button class="ghost" id="bDelData" type="button">Delete my data</button></div>
+    <div class="row" id="delConfirm" hidden><span class="note" style="flex:1 1 100%">Delete your player name, points, sail number and friends list from the server? This cannot be undone.</span><button class="go" id="bDelYes" type="button">Yes, delete</button><button class="ghost" id="bDelNo" type="button">Cancel</button></div>
   </div>
 </div>
 
@@ -1534,7 +1535,9 @@ function render(){
 const UNLOCK_PTS=2000; let myTotal=0; const gearFree=()=>myTotal>=UNLOCK_PTS;
 // step by step: every item has its own threshold (price × 100, rounded to tens): sheets from 50, bags from 100, flags at 200, … up to 1000 and 2000 for the premium pieces
 const ptsFor=price=>Math.round(price*10)*10, itemFree=price=>myTotal>=ptsFor(price);
-function updUnlockNote(){ const n=document.getElementById('unlockNote'); if(n) n.textContent='Unlock step by step with your all-time ranking points: every piece of gear, every bag, sheet and flag shows the points it needs (from 50 up to 2000 for the very special pieces). Boat designs are not included. You: '+myTotal+' points'+(gearFree()?' · everything unlocked!':'.'); }
+// store apps (version 1): no payments yet – priced items unlock with ranking points only, no prices are shown
+const APP=!!window.OPTI_APP, lockedP=price=>APP&&!!price&&!itemFree(price), lockTxt=price=>'🔒 '+ptsFor(price)+' pts';
+function updUnlockNote(){ const n=document.getElementById('unlockNote'); if(n) n.textContent='Unlock step by step with your all-time ranking points: every piece of gear, every bag, sheet and flag shows the points it needs (from 50 up to 2000 for the very special pieces).'+(APP?' Boat designs and your own sail number too.':' Boat designs are not included.')+' You: '+myTotal+' points'+(gearFree()?' · everything unlocked!':'.'); }
 let rdb=null, ruser=null, myUid=null, rankPlayers=[], friends={ids:[],names:{}}, rankSub=null, rankView={w:'all',p:'wk'};
 function isoWeek(d){ const t=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())); const day=t.getUTCDay()||7; t.setUTCDate(t.getUTCDate()+4-day); const y=t.getUTCFullYear(); const w=Math.ceil(((t-Date.UTC(y,0,1))/864e5+1)/7); return y+'-W'+String(w).padStart(2,'0'); }
 const monthKey=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
@@ -1543,7 +1546,7 @@ const monthKey=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
     if(WEBONLY||!(window.claude&&window.claude.use)) return;
     ruser=await window.claude.use('user'); rdb=await window.claude.use('db');
     if(ruser) myUid=await ruser.id();
-    if(rdb&&myUid){ try{ const ps=await rdb.doc('players/'+myUid).get(); if(ps.exists) myTotal=+((ps.data()||{}).total)||0; }catch(_){} updUnlockNote(); try{ renderGear(); renderFlags(); }catch(_){} }
+    if(rdb&&myUid){ try{ const ps=await rdb.doc('players/'+myUid).get(); if(ps.exists) myTotal=+((ps.data()||{}).total)||0; }catch(_){} updUnlockNote(); try{ renderGear(); renderFlags(); renderSkins(); }catch(_){} }
     if(rdb&&myUid){ const f=await rdb.doc('data/users/'+myUid+'/friends').get(); if(f.exists){ const d=f.data()||{}; friends={ids:Array.isArray(d.ids)?d.ids.filter(x=>typeof x==='string').slice(0,500):[],names:(d.names&&typeof d.names==='object')?d.names:{}}; } }
   }catch(e){}
 })();
@@ -1587,6 +1590,19 @@ function renderRanks(){
 function rseg(id,key){$(id).addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;for(const x of $(id).children)x.setAttribute('aria-pressed',x===b);rankView[key]=b.dataset.v;renderRanks();});}
 rseg('segRW','w'); rseg('segRP','p');
 $('bRank').onclick=openRanks; $('bRankOk').onclick=()=>{$('rankBox').hidden=true;};
+// "Delete my data" (required by the app stores): removes your ranking row, friends list, sail number and the anonymous account
+$('bDelData').onclick=()=>{ $('delConfirm').hidden=false; };
+$('bDelNo').onclick=()=>{ $('delConfirm').hidden=true; };
+$('bDelYes').onclick=async()=>{ const n=$('rankNote'); $('delConfirm').hidden=true; n.textContent='Deleting …';
+  try{
+    if(rdb&&myUid){ for(const p of ['players/'+myUid,'data/users/'+myUid+'/friends']){ const r=rdb.doc(p); if(r&&r.delete) await r.delete(); else if(r&&r.set) await r.set({}); } }
+    if(ruser&&typeof ruser.deleteAccount==='function') await ruser.deleteAccount();
+    for(const k of ['std-sailno',NKEY]) try{ localStorage.removeItem(k); }catch(e){}
+    mySailNo=null; myTotal=0; friends={ids:[],names:{}}; rankPlayers=rankPlayers.filter(p=>p.id!==myUid);
+    try{ snShow(); renderGear(); renderFlags(); }catch(e){} renderRanks();
+    n.textContent='Done: all your data has been deleted. If you play online again, a new anonymous player ID is created.';
+  }catch(e){ n.textContent='Could not delete everything ('+(e&&e.message||e)+'). Please check your connection or write to fl.stindt@gmail.com.'; }
+};
 document.addEventListener('click',e=>{ const b=e.target.closest('.addf'); if(!b) return; addFriend(b.dataset.uid,b.dataset.nick); b.textContent='Friend ✓'; b.disabled=true; });
 
 // ---------- real 3D view (three.js) ----------
@@ -2248,23 +2264,24 @@ function renderSkins(){
     const c=document.createElement('canvas'); const d=Math.min(2,window.devicePixelRatio||1); c.width=Math.round(104*d); c.height=Math.round(72*d);
     bt.appendChild(c);
     const t=document.createElement('span'); t.className='sn'; t.textContent=k.n; bt.appendChild(t);
-    const pr=document.createElement('span'); pr.className='sp'; pr.textContent=k.price?'€'+k.price.toFixed(2):'free'; bt.appendChild(pr);
+    const pr=document.createElement('span'); pr.className='sp'; pr.textContent=APP?(k.price?(itemFree(k.price)?'unlocked ✓':lockTxt(k.price)):'free'):(k.price?'€'+k.price.toFixed(2):'free'); bt.appendChild(pr);
     c.dataset.i=i; const g=c.getContext('2d'); g.scale(d,d); drawSkinCard(g,104,72,k);
-    bt.onclick=()=>{ mySkin=i; try{localStorage.setItem('std-skin',String(i));}catch(e){} renderSkins(); drawPreview2D(); };
+    bt.onclick=()=>{ if(lockedP(k.price)){ $('skinNote').textContent=k.n+' unlocks at '+ptsFor(k.price)+' ranking points (you have '+myTotal+').'; return; } mySkin=i; try{localStorage.setItem('std-skin',String(i));}catch(e){} renderSkins(); drawPreview2D(); };
     box.appendChild(bt);
   });
   if(window.T3&&T3.renderCards) T3.renderCards();
   $('skinName').textContent=SKINS[mySkin].n;
-  const k=SKINS[mySkin]; if(!(window.T3&&T3.err)) $('skinNote').textContent='Selected: '+k.n+(k.price?' · shop coming soon, free for testing until then':'');
+  const k=SKINS[mySkin]; if(!(window.T3&&T3.err)) $('skinNote').textContent='Selected: '+k.n+(k.price&&!APP?' · shop coming soon, free for testing until then':'');
 }
 // ---- own sail number (country code + number), unique per player
 const COUNTRIES=['GER','AUT','SUI','NED','DEN','SWE','NOR','FIN','POL','FRA','ITA','ESP','POR','GBR','IRL','BEL','LUX','CZE','HUN','CRO','SLO','GRE','TUR','USA','CAN','BRA','ARG','AUS','NZL','JPN','CHN','RSA'];
 let mySailNo=null; try{ const v=localStorage.getItem('std-sailno'); if(v&&/^[A-Z]{3} \d{1,5}$/.test(v)) mySailNo=v; }catch(e){}
 $('snC').innerHTML=COUNTRIES.map(c=>'<option>'+c+'</option>').join('');
-function snShow(){ $('snNote').textContent=mySailNo?('Your sail number: '+mySailNo):''; $('bSN').textContent=mySailNo?'Change':'Buy'; if(mySailNo){ const [c,n]=mySailNo.split(' '); $('snC').value=c; $('snN').value=n; } }
+function snShow(){ $('snNote').textContent=mySailNo?('Your sail number: '+mySailNo):(APP&&!itemFree(4.99)?'Your own sail number unlocks at '+ptsFor(4.99)+' ranking points.':''); $('bSN').textContent=mySailNo?'Change':(APP?'Save':'Buy'); if(mySailNo){ const [c,n]=mySailNo.split(' '); $('snC').value=c; $('snN').value=n; } }
 snShow();
 $('bSN').onclick=async()=>{
   const c=$('snC').value, n=String($('snN').value||'').replace(/\D/g,'').replace(/^0+/,'');
+  if(lockedP(4.99)){ $('snNote').textContent='Your own sail number unlocks at '+ptsFor(4.99)+' ranking points (you have '+myTotal+').'; return; }
   if(!COUNTRIES.includes(c)||!n||n.length>5){ $('snNote').textContent='Please choose a country code and a number with 1 to 5 digits.'; return; }
   const want=c+' '+n;
   if(want===mySailNo){ snShow(); return; }
@@ -2328,9 +2345,9 @@ function renderFlags(){
     const cv=document.createElement('canvas'); const d=Math.min(2,devicePixelRatio||1); cv.width=30*d; cv.height=20*d; const g=cv.getContext('2d'); g.scale(d,d);
     if(c) drawNatFlag(g,c,0,0,30,20); else { g.strokeStyle='#a9c6d1'; g.lineWidth=1.5; g.strokeRect(1,1,28,18); g.beginPath(); g.moveTo(2,18); g.lineTo(28,2); g.stroke(); }
     b.appendChild(cv); const t=document.createElement('span'); t.textContent=c||'none'; b.appendChild(t);
-    b.onclick=()=>{ myFlag=c; try{localStorage.setItem('std-flag',c);}catch(e){} renderFlags(); drawPreview2D(); };
+    b.onclick=()=>{ if(c&&lockedP(1.99)){ $('flagNote').textContent='Flags unlock at '+ptsFor(1.99)+' ranking points (you have '+myTotal+').'; return; } myFlag=c; try{localStorage.setItem('std-flag',c);}catch(e){} renderFlags(); drawPreview2D(); };
     box.appendChild(b); });
-  $('flagNote').textContent=(myFlag?('On the sail: flag '+myFlag+(itemFree(1.99)?' (unlocked with your ranking points)':' (test mode, no payment yet)')):'No flag. Choose a country to put its flag on the sail.');
+  $('flagNote').textContent=(myFlag?('On the sail: flag '+myFlag+(APP?'':(itemFree(1.99)?' (unlocked with your ranking points)':' (test mode, no payment yet)'))):(APP&&!itemFree(1.99)?'Flags unlock at '+ptsFor(1.99)+' ranking points.':'No flag. Choose a country to put its flag on the sail.'));
 }
 function renderGear(){
   updUnlockNote();
@@ -2341,12 +2358,13 @@ function renderGear(){
     GEAR[kind].map((it,i)=>[it,i]).sort((x,y)=>(x[0].p||0)-(y[0].p||0)||x[1]-y[1]).forEach(([it,i])=>{ const b=document.createElement('button'); b.type='button'; b.className='gear'; b.setAttribute('aria-pressed',myGear[kind]===i); b.setAttribute('aria-label',label+': '+it.n);
       const c=document.createElement('canvas'); const d=Math.min(2,devicePixelRatio||1); c.width=56*d; c.height=56*d; const g=c.getContext('2d'); g.scale(d,d); drawGearIcon(g,kind,it); b.appendChild(c);
       const n=document.createElement('span'); n.className='sn'; n.textContent=it.n; b.appendChild(n);
-      const pr=document.createElement('span'); pr.className='sp'; pr.textContent=it.p?(itemFree(it.p)?'unlocked ✓':'€'+it.p.toFixed(2)+'\nor '+ptsFor(it.p)+' pts'):'free'; pr.style.whiteSpace='pre-line'; b.appendChild(pr);
-      b.onclick=()=>{ myGear[kind]=i; try{localStorage.setItem('std-gear',JSON.stringify(myGear));}catch(e){} renderGear(); };
+      const pr=document.createElement('span'); pr.className='sp'; pr.textContent=it.p?(itemFree(it.p)?'unlocked ✓':(APP?lockTxt(it.p):'€'+it.p.toFixed(2)+'\nor '+ptsFor(it.p)+' pts')):'free'; pr.style.whiteSpace='pre-line'; b.appendChild(pr);
+      b.onclick=()=>{ if(lockedP(it.p)){ $('unlockNote').textContent=it.n+' unlocks at '+ptsFor(it.p)+' ranking points (you have '+myTotal+').'; return; } myGear[kind]=i; try{localStorage.setItem('std-gear',JSON.stringify(myGear));}catch(e){} renderGear(); };
       row.appendChild(b); });
   }
 }
 renderGear(); renderFlags();
+if(APP){ const sb=$('shopBox'); const ld=sb.querySelector('.lead'); if(ld) ld.textContent='Unlock gear, flags, designs and your own sail number with ranking points from online races against other players.'; sb.querySelectorAll('.lbl').forEach(l=>{ l.textContent=l.textContent.replace(' · €4.99',' · '+ptsFor(4.99)+' ranking points').replace('€1.99 · or 200 ranking points',ptsFor(1.99)+' ranking points'); }); }
 $('bShop').onclick=()=>{ $('shopBox').hidden=false; if(window.T3&&T3.renderCards) T3.renderCards(); };
 $('bShopOk').onclick=()=>{ $('shopBox').hidden=true; };
 renderSkins();
