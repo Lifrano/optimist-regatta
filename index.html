@@ -784,7 +784,7 @@ function aiDesired(b,w){
     const appr=b.y/(VMAX*0.4)+[6,6,5,4.5][LV||0];   // when to pull the sail in and go for the line
     if(b.y<6&&tl>1.2){ if(!b.me&&!b.remote) b.luff=false; return brg(b.x,b.y,b.x*0.95,45); }   // too early over (or on) the line before the start: dip back below it
     if(tl>appr){
-      let hx=b.hold.x; if(TC>=3){ const fav=norm(S.wbase); if(Math.abs(fav)>2) hx=clamp(hx*0.8+Math.sign(fav)*55,PIN.x+35,CB.x-35); }   // Worlds: wait closer to the favoured end of the line (mean wind)
+      let hx=b.hold.x; if(TC>=3){ const fav=norm(S.wbase); if(Math.abs(fav)>2) hx=clamp(hx*0.62+Math.sign(fav)*95,PIN.x+35,CB.x-35); }   // Worlds: wait closer to the favoured end of the line (mean wind)
       const hy=b.hold.y+[40,40,15,0][LV||0], dx=hx-b.x, dy=hy-b.y, dd=Math.hypot(dx,dy), bot=!b.me&&!b.remote;
       // lined up like a real Opti start: on starboard, close-hauled, sail flapping, (almost) stopped just below the line
       if(dd<30||(b.parked&&dd<45)){ b.parked=true; b.side=-1; if(bot) b.luff=true; return w.dir-50; }
