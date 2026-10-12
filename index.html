@@ -38,6 +38,7 @@ canvas#hud{position:fixed;left:0;top:0;display:block;pointer-events:none}
 .seg button+button{border-left:1px solid rgba(234,244,247,.25)}
 .seg button[aria-pressed="true"]{background:var(--ink);color:var(--sea-deep)}
 .go{background:var(--signal);color:#1b0b02;border:0;border-radius:4px;padding:14px 18px;font:900 22px var(--f-display);letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
+button:disabled{opacity:.45;cursor:default}
 .ghost{background:transparent;color:var(--ink);border:1px solid rgba(234,244,247,.3);border-radius:4px;padding:10px 14px;font:600 14px var(--f-body);cursor:pointer}
 input.txt{background:rgba(234,244,247,.08);color:var(--ink);border:1px solid rgba(234,244,247,.3);border-radius:4px;padding:10px 12px;font:600 15px var(--f-body);min-width:0;flex:1 1 120px;-webkit-user-select:text;user-select:text}
 input.code{font-family:var(--f-mono);text-transform:uppercase;letter-spacing:.2em;flex:0 1 110px}
@@ -156,12 +157,14 @@ select.txt{appearance:auto}
     <div class="row online-only"><span class="lbl">Your name</span>
       <input class="txt" id="nick" maxlength="14" placeholder="Your name" autocomplete="off">
     </div>
+    <button class="go online-only" id="bQuick" type="button">Start race</button>
+    <p class="tag online-only" style="margin-top:-4px">Against other players who are online right now</p>
+    <span class="lbl online-only">Or race with friends</span>
     <div class="row online-only" id="onlineRow">
       <button class="ghost" id="bCreate" type="button">Create room</button>
       <input class="txt code" id="code" maxlength="4" placeholder="CODE" autocomplete="off">
       <button class="ghost" id="bJoin" type="button">Join</button>
     </div>
-    <div class="row online-only"><button class="ghost" id="bQuick" type="button">Find random opponents</button></div>
     <p class="note online-only" id="onlineNote"></p>
     <hr class="online-only">
     <h2 class="sec">Offline practice</h2>
@@ -211,9 +214,8 @@ select.txt{appearance:auto}
     <ul id="lbList"></ul>
     <div id="lbHost" class="row">
       <span class="lbl">Mode</span>
-      <div class="seg" id="segOM"><button type="button" data-v="0" aria-pressed="true">Fleet Race</button><button type="button" data-v="1">Team Race 4:4</button></div>
-      <span class="lbl">Add computer boats (in Team Race the computer fills each team up to 4 boats)</span>
-      <div class="seg" id="segB"><button type="button" data-v="0" aria-pressed="true">0</button><button type="button" data-v="2">2</button><button type="button" data-v="4">4</button></div>
+      <div class="seg" id="segOM"><button type="button" data-v="0" aria-pressed="true">Fleet Race</button><button type="button" data-v="1">Team Race</button></div>
+      <span class="lbl">Online races are sailed only against other players – no computer boats</span>
     </div>
     <button class="go" id="bRace" type="button">Start race</button>
     <p class="tag" id="lbWait">Waiting for the start …</p>
@@ -368,7 +370,7 @@ const $=id=>document.getElementById(id);
 const LAKE=(()=>{
   // outline checked against aerial photos: a wide basin in the south (An der Alster / St. Georg) with Uhlenhorst bulging east and the
   // Alstervorland on the west, then a narrow neck to the north past the Fährhaus point and the Hofweg canal up to the Krugkoppel bridge
-  const SC=4.3, X=xm=>(xm-100)*SC, Y=ym=>-(ym-350)*SC+1000;   // bigger lake: more room around the course   // windward mark well away from the northern shore
+  const SC=5.6, X=xm=>(xm-100)*SC, Y=ym=>-(ym-350)*SC+1000;   // bigger lake: more room around the course   // windward mark well away from the northern shore
   const M=[
     [-80,0],[-160,120],[-240,300],[-290,500],[-310,700],[-300,900],[-270,1080],[-235,1250],[-210,1450],[-195,1650],[-185,1850],      // west shore, Alstervorland
     [-180,2000],[-190,2200],[-70,2200],[-60,2000],                                                                                    // Krugkoppel bridge, the Alster river to the north
@@ -416,7 +418,7 @@ let ZONE=3*BL;                      // team racing (App. D): 2 hull lengths
 // Fleet race: start – 1 (port) – 2 (port) – gate 3s/3p – upwind finish
 // Team race:  start – 1 (stbd) – 2 (stbd) – 3 (port) – 4 (port) – upwind finish
 const COURSES={
-  fleet:{key:'fleet',pin:{x:360,y:0},cb:{x:840,y:0},marks:[{n:'1',x:616,y:-1840,s:-1},{n:'2',x:-613,y:-1354,s:-1},{n:'3',gate:[{n:'3s',x:-716,y:1503,s:1},{n:'3p',x:-581,y:1503,s:-1}]}],fin:[{x:-572,y:36},{x:-298,y:36}]},
+  fleet:{key:'fleet',pin:{x:360,y:0},cb:{x:840,y:0},marks:[{n:'1',x:616,y:-2600,s:-1},{n:'2',x:-613,y:-2114,s:-1},{n:'3',gate:[{n:'3s',x:-716,y:1503,s:1},{n:'3p',x:-581,y:1503,s:-1}]}],fin:[{x:-572,y:36},{x:-298,y:36}]},
   team:{key:'team',pin:{x:-738,y:0},cb:{x:-362,y:0},marks:[{n:'1',x:-476,y:-1040,s:1},{n:'2',x:260,y:-1040,s:1},{n:'3',x:410,y:0,s:-1},{n:'4',x:1145,y:0,s:-1}],fin:[{x:1033,y:-1040},{x:1410,y:-1040}]}
 };
 let C=COURSES.fleet;   // the course of the current race
@@ -478,7 +480,10 @@ const GEAR={
 let myGear={v:0,t:0,h:0,b:0,s:0}; try{ const g=JSON.parse(localStorage.getItem('std-gear')||'null'); if(g) for(const k of Object.keys(myGear)) myGear[k]=clamp(g[k]|0,0,GEAR[k].length-1); }catch(e){}
 const gearOf=b=>Object.assign({v:0,t:0,h:0,b:0,s:0},b.gear||{});
 let mySkin=0; try{mySkin=clamp(+localStorage.getItem('std-skin')|0,0,SKINS.length-1);}catch(e){}
-const skinOf=b=>(b.team>=0||b.skin==null)?null:SKINS[clamp(b.skin|0,0,SKINS.length-1)];
+// team race: hull and sail in the team colour (blue / red), sail number in white
+const TEAMSK=[{n:'Team Blue',hull:['#2f7bf6','#1d5fd6'],deck:'#4b8ef8',rim:'#ffffff',hp:'swoosh',hc:'#ffffff',hc2:'#0d2a66',sail:['#5a98f9','#2f7bf6'],floor:'#3f86f2',sp:'band',sc:'#ffffff',sc2:'#0d2a66',dark:true,price:0},
+              {n:'Team Red',hull:['#e5463b','#c4302a'],deck:'#ec5f55',rim:'#ffffff',hp:'swoosh',hc:'#ffffff',hc2:'#5c0f0b',sail:['#ee6a61','#e5463b'],floor:'#e2564c',sp:'band',sc:'#ffffff',sc2:'#5c0f0b',dark:true,price:0}];
+const skinOf=b=>(S&&S.team&&(b.team===0||b.team===1))?TEAMSK[b.team]:(b.team>=0||b.skin==null)?null:SKINS[clamp(b.skin|0,0,SKINS.length-1)];
 // ---- skin painting (shared by the game view and the shop cards)
 function lgrad(g,x0,y0,x1,y1,c){const gr=g.createLinearGradient(x0,y0,x1,y1); gr.addColorStop(0,c[0]); gr.addColorStop(1,c[1]); return gr;}
 // top-down hull pattern, local coords: x across beam, y bow(-L/2) to stern(+L/2); caller has clipped to the hull
@@ -622,7 +627,7 @@ function drawSkinCard(g,W,H,sk,noBg,txt,flag){
   g.lineWidth=1.3; g.beginPath(); g.moveTo(30,52); g.lineTo(88,50); g.stroke();                               // boom
   g.restore();
   { // sail number like on a real dinghy: big, two lines (national letters above the number), dark on a light sail
-    const dark=(parseInt((sk.sail[0]||'#fff').slice(1,3),16)<100), t=String(txt||'T2D'), parts=t.split(' ');
+    const dark=sk.dark??(parseInt((sk.sail[0]||'#fff').slice(1,3),16)<100), t=String(txt||'T2D'), parts=t.split(' ');
     const y0=sk.burgee?35:(sk.lm?23:30), cx=50;
     g.fillStyle=dark?'rgba(255,255,255,.92)':'rgba(22,40,105,.92)'; g.textAlign='center';
     if(parts.length===2){ // like a real sail: national letters and number on one line, flag below
@@ -697,12 +702,12 @@ const botTeamsCount=(opt,myTeam)=>opt.teamBots?(opt.teamBots[0]+opt.teamBots[1])
 function newRace(opt){
   const R=rng(opt.seed);
   const puffs=[];
-  for(let i=0;i<48;i++) puffs.push({i,k:0,x:-1300+R()*2600,y:-3000+R()*4800,r:140+R()*240,s:0.25+R()*0.35,veer:(R()-0.5)*24});
+  for(let i=0;i<64;i++) puffs.push({i,k:0,x:-1500+R()*3400,y:-4200+R()*6000,r:140+R()*240,s:0.25+R()*0.35,veer:(R()-0.5)*24});
   const boats=[];
   const skill=1;   // all levels: computer boats are exactly as fast as your boat; the levels differ only in tactics
   const team=!!opt.team, myTeam=team?(opt.myTeam|0):-1;
   setCourse(team?COURSES.team:COURSES.fleet);
-  { const nb=1+(team?botTeamsCount(opt,myTeam):opt.bots|0), c=(PIN.x+CB.x)/2, len=clamp((nb+1)*BL*1.2,CB.x-PIN.x,1500); PIN.x=c-len/2; CB.x=c+len/2; }   // bigger fleets get a longer start line
+  { const nb=1+(team?botTeamsCount(opt,myTeam):opt.bots|0), c=(PIN.x+CB.x)/2, len=clamp((nb+1)*BL*1.45,CB.x-PIN.x,2200); PIN.x=c-len/2; CB.x=c+len/2; }   // bigger fleets get a longer start line
   const SCX=(PIN.x+CB.x)/2, HW=(CB.x-PIN.x)/2, W=C.wait;   // start line centre and half width
   // team race: everybody starts in the waiting area behind the line
   const wpos=()=>({x:W.x0+60+Math.random()*(W.x1-W.x0-120),y:W.y0+60+Math.random()*(W.y1-W.y0-120)});
@@ -713,7 +718,7 @@ function newRace(opt){
   const cnt=[0,0];
   botTeams.forEach((tm,i)=>{
     // big fleets: line up in several rows behind the start line (max. 12 boats per row)
-    const n=botTeams.length, rows=Math.ceil(n/Math.max(6,Math.floor(HW*1.66/(BL*1.3)))), row=i%rows, k=Math.floor(i/rows), per=Math.ceil(n/rows), hx=SCX+HW*(-0.83+1.66*(k+0.5)/per)+(R()-0.5)*(n>12?14:40), ry=row*55, wx=W?W.x0+60+R()*(W.x1-W.x0-120):hx, wy=W?W.y0+60+R()*(W.y1-W.y0-120):150+ry+R()*(n>12?40:120);
+    const n=botTeams.length, rows=Math.ceil(n/Math.max(6,Math.floor(HW*1.66/(BL*1.3)))), row=i%rows, k=Math.floor(i/rows), per=Math.ceil(n/rows), hx=SCX+HW*(-0.83+1.66*(k+0.5+(rows>1?(row%2?0.25:-0.25):0))/per)+(R()-0.5)*(n>12?14:40), ry=row*75, wx=W?W.x0+60+R()*(W.x1-W.x0-120):hx, wy=W?W.y0+60+R()*(W.y1-W.y0-120):150+ry+R()*(n>12?40:120);
     const nm=team?(TEAMN[tm]+' '+(++cnt[tm]+(tm===myTeam&&!opt.teamBots?1:0))):NAMES[i%NAMES.length];
     boats.push(makeBoat({name:nm+(opt.online?' (KI)':''),color:team?TEAMC[tm]:COLORS[i%8],team:tm,x:wx,y:wy,h:R()<0.5?70:-70,
       skill,smart:[2.2,4.6,6.2][opt.d]*(0.95+R()*0.1),side:R()<0.5?1:-1,hold:{x:hx,y:38+ry*0.8+R()*(n>12?12:22)},aimX:(R()-0.5)*120,fx:(R()-0.5)*260}));
@@ -819,6 +824,9 @@ function targetOf(b){
   // a rounding mark: first pass it on the correct side (beside the mark), then sweep round the outside of the corner
   const side=m.s<0?[-m.din[1],m.din[0]]:[m.din[1],-m.din[0]];   // port rounding: pass the mark on your left = right of it in the direction of travel
   const along=(b.x-m.x)*m.din[0]+(b.y-m.y)*m.din[1], lat=(b.x-m.x)*side[0]+(b.y-m.y)*side[1];
+  // close to the mark on the wrong side: never pass it the wrong way – first get back below it, then cross over to the correct side
+  if(lat<-4&&along>-170&&along<40){ if(along>-45) return {x:m.x-side[0]*70-m.din[0]*120,y:m.y-side[1]*70-m.din[1]*120,wrong:side};
+    return {x:m.x+side[0]*60-m.din[0]*70,y:m.y+side[1]*60-m.din[1]*70,wrong:side}; }
   if(along<-60) return {x:m.x+side[0]*45-m.din[0]*15,y:m.y+side[1]*45-m.din[1]*15};   // approach: beside the mark on the side it is left on
   if(lat<0&&along<20) return {x:m.x+side[0]*55-m.din[0]*45,y:m.y+side[1]*55-m.din[1]*45};   // on the wrong side: go back round
   return {x:m.x+m.o[0]*48+m.dout[0]*25,y:m.y+m.o[1]*48+m.dout[1]*25};   // round the outside of the corner
@@ -831,7 +839,7 @@ function aiDesired(b,w){
     const appr=b.y/(VMAX*0.4)+[6,6,5,4.5][LV||0];   // when to pull the sail in and go for the line
     if(b.y<6&&tl>1.2){ if(!b.me&&!b.remote) b.luff=false; return brg(b.x,b.y,clamp(b.x*0.95,PIN.x+40,CB.x-40),30); }   // too early over the line: dip back just below it, staying between the ends
     if(tl>appr){
-      const lc=(PIN.x+CB.x)/2; let hx=b.hold.x; if(TC>=3){ const fav=norm(S.wbase); if(Math.abs(fav)>2) hx=clamp(lc+(hx-lc)*0.62+Math.sign(fav)*95,PIN.x+35,CB.x-35); }
+      const lc=(PIN.x+CB.x)/2; let hx=b.hold.x; if(TC>=3){ const fav=norm(S.wbase), big=S.boats.length>12, cq=big?0.85:0.62; if(Math.abs(fav)>2) hx=clamp(lc+(hx-lc)*cq+Math.sign(fav)*(big?80:95),PIN.x+35,CB.x-35); }   // favoured end: big fleets crowd it less
       if(C.wait&&tl>60){ const W=C.wait; b.parked=false; const wx=clamp(b.x,W.x0+40,W.x1-40), wy=clamp(b.y,W.y0+40,W.y1-40); if(Math.hypot(wx-b.x,wy-b.y)>10) return brg(b.x,b.y,wx,wy); if(!b.me&&!b.remote) b.luff=true; return w.dir+(b.side||1)*90; }   // team race with a waiting area: wait there until one minute before the start
       const hy=b.hold.y+[40,40,15,0][LV||0], dx=hx-b.x, dy=hy-b.y, dd=Math.hypot(dx,dy), bot=!b.me&&!b.remote;
       // lined up like a real dinghy start: on starboard, close-hauled, sail flapping, (almost) stopped just below the line
@@ -876,6 +884,7 @@ function aiDesired(b,w){
     // National / Worlds: get out of dirty air quickly
     if(TC>=1&&b.cool<0&&b.shade<[1,0.8,0.88,0.85][TC]&&S.R()<b.smart*0.08) want=true;
     { const hd=(w.dir+b.side*UA)*D2R, ax=b.x+Math.sin(hd)*170, ay=b.y-Math.cos(hd)*170; if(!LAKE.water(ax,ay)||LAKE.dist(ax,ay)<50){ want=true; b.cool=-1; } }   // never sail on towards the shore
+    if(T.wrong){ const hs=s=>{ const h=(w.dir+s*UA)*D2R; return Math.sin(h)*T.wrong[0]-Math.cos(h)*T.wrong[1]; }; if(hs(b.side)<0&&hs(-b.side)>0){ want=true; b.cool=-1; } else want=false; }   // wrong side of the mark: sail the tack that leads back to the correct side
     if(want&&b.cool<0){b.side=-b.side;b.tackTo=S.t+4;b.tackW=w.dir;b.cool=(LV>=3?4+S.R()*1.5:LV===2?7+S.R()*1.5:5+S.R()*4);}
     return w.dir+b.side*UA;
   }
@@ -892,6 +901,12 @@ function aiDesired(b,w){
   if(Math.abs(rel)>168) return w.dir+180+(Math.sign(rel)||1)*12;
   return bt;
 }
+function lineGuard(b,w,d){
+  if(!S.gun&&!b.me&&!b.remote&&!b.ocs&&b.y<60&&b.y>-30){ const tl=-S.t, up=b.v*Math.cos(b.h*D2R), hu=Math.cos(d*D2R);
+    if(tl>0.3&&up>0&&b.y-up*Math.min(tl,2.5)<6) b.luff=true;
+    if(tl>0.3&&b.y<14&&hu>-0.05){ const sd=Math.sign(norm(b.h-w.dir))||b.side||1; d=w.dir+sd*100; b.luff=true; } }
+  return d;
+}
 function aiSteer(b,w){
   // stuck (e.g. against the shore or a mark): sail back towards the middle of the course for a few seconds
   if(S.gun&&!b.done){ b.slowT=(b.v<VMAX*0.06)?(b.slowT||0)+1/60:0; if(b.slowT>4||LAKE.dist(b.x,b.y)<14){ if(!(b.rescue>S.t)) b.rescue=S.t+6; b.slowT=0; } }
@@ -903,7 +918,7 @@ function aiSteer(b,w){
     const T0=nextMarkOf(b), dx=T0.x-b.x, dy=T0.y-b.y, dl=Math.hypot(dx,dy)||1; for(let k=1;k<=40;k++){ const nx=b.x+dx/dl*k*3, ny=b.y+dy/dl*k*3; if(LAKE.water(nx,ny)){ b.x+=(nx-b.x)*0.1+dx/dl*1.5; b.y+=(ny-b.y)*0.1+dy/dl*1.5; break; } }
     if(best!=null) return best; return brg(b.x,b.y,T0.x,T0.y); }
   let d=aiDesired(b,w);
-  if(!rulesOn()) return d;
+  if(!rulesOn()) return lineGuard(b,w,d);
   // team racing: cover the nearest opponent behind on the beat (sail the same tack, sit on its wind)
   if(S.team&&isUp(b.leg)&&b.cool<0&&!b.ocs&&S.R()<b.smart*0.03){
     const pb=progress(b); let tgt=null,bd=200;
@@ -931,7 +946,16 @@ function aiSteer(b,w){
     if(blk){ b.blkT=(b.blkT||0)+1/60; if(b.blkT<((b.lvl??S.lvl)>=3?1.5:3)) d=b.h+clamp(norm(d-b.h),-12,12); } else b.blkT=0; } else b.blkT=0;
   // don't touch marks or the committee boat
   for(const m of [PIN,CB,...C.all,...C.fin]){ const r=(m===CB||m===C.fin[1])?44:26, dd=Math.hypot(m.x-b.x,m.y-b.y); if(dd>r+50) continue;
-    const relM=norm(brg(b.x,b.y,m.x,m.y)-b.h), lim=dd<r+18?80:45; if(Math.abs(relM)<lim){ d=b.h-(Math.sign(relM)||1)*45; break; } }
+    const relM=norm(brg(b.x,b.y,m.x,m.y)-b.h), lim=dd<r+18?80:45; if(Math.abs(relM)<lim){ const cm=b.started&&!b.done&&C.marks[b.leg]===m&&!m.gate;   // the mark we are rounding: always turn so that it stays on the correct side
+      d=b.h-(cm?m.s:(Math.sign(relM)||1))*45; break; } }
+  // R28: never pass the mark we are rounding on the wrong side – don't sail up past it on that side, bear off towards the correct side instead
+  if(b.started&&!b.done&&b.leg<finLeg()&&!C.marks[b.leg].gate){ const m=C.marks[b.leg], sv=m.s<0?[-m.din[1],m.din[0]]:[m.din[1],-m.din[0]];
+    const al=(b.x-m.x)*m.din[0]+(b.y-m.y)*m.din[1], la=(b.x-m.x)*sv[0]+(b.y-m.y)*sv[1];
+    if(la<-4&&la>-220&&al>-110&&al<10){ const hd=d*D2R; if(Math.sin(hd)*m.din[0]-Math.cos(hd)*m.din[1]>-0.05){
+      const toS=Math.atan2(sv[0],-sv[1])/D2R, down=Math.atan2(-m.din[0],m.din[1])/D2R, ok=h=>Math.abs(norm(h-w.dir))>48;
+      d=ok(toS)?toS:ok((toS+down)/2)?(toS+down)/2:down; } } }
+  // before the gun: never get above the start line – ease the sail early enough and bear away along the line if it gets close
+  d=lineGuard(b,w,d);
   // never stay head to wind (in irons the boat would drift backwards): bear away onto the nearer tack
   if(!b.luff&&Math.abs(norm(d-w.dir))<38&&Math.abs(norm(b.h-w.dir))<38){ const sd=Math.sign(norm(b.h-w.dir))||b.side; d=w.dir+sd*55; }
   return d;
@@ -942,7 +966,7 @@ function step(dt){
   S.t+=dt;
   const wdNow=windDir(S.t);
   const dvx=-Math.sin(wdNow*D2R)*26, dvy=Math.cos(wdNow*D2R)*26;
-  for(const p of S.puffs){p.x+=dvx*dt;p.y+=dvy*dt; if(p.y>1800){p.y-=4800;p.k++;p.x=-1300+hash(p.i*97+7,p.k*131+3)*2600;}}
+  for(const p of S.puffs){p.x+=dvx*dt;p.y+=dvy*dt; if(p.y>1800){p.y-=6000;p.k++;p.x=-1500+hash(p.i*97+7,p.k*131+3)*3400;}}
   if(!S.gun&&S.t>=0){
     S.gun=true;
     let mine=false;
@@ -1192,12 +1216,12 @@ setInterval(()=>{
   if(left<=0||n>=8){ net.autoAt=null; $('lbNote').textContent=''; hostStart(); }
 },500);
 function hostStart(){
-  const r={id:Date.now().toString(36),seed:(Math.random()*1e9)|0,b:settings.b,d:1,team:settings.om===1};
-  if(r.team){ // split the people in the room into two teams, the computer fills each team up to 4 boats
+  const r={id:Date.now().toString(36),seed:(Math.random()*1e9)|0,b:0,d:1,team:settings.om===1};   // online: players only, no computer boats
+  if(r.team){ // split the people in the room into two teams (no computer boats online)
     const ps=peersList().slice().sort((a,b)=>a.peer<b.peer?-1:1); r.tp={}; const h=[0,0];
     ps.forEach((p,i)=>{ const t=i%2; r.tp[p.peer]=t; h[t]++; });
     if(!ps.length){ r.tp={}; h[0]=1; }
-    r.tb=[Math.max(0,4-h[0]),Math.max(0,4-h[1])];
+    r.tb=[0,0];
   }
   net.raceId=r.id; net.race=r;
   startOnline(r,-(COUNTDOWN+JOIN));
@@ -1211,8 +1235,8 @@ function myTeamIn(r){
 function startOnline(r,t0){
   if(net&&net.quick&&!amHost()) clearQueue();
   const host=amHost(), team=!!r.team;
-  newRace({seed:r.seed|0,bots:host&&!team?clamp(r.b|0,0,6):0,d:clamp(r.d|0,0,2),nick:net.nm,color:net.col,online:true,
-    team, myTeam:team?myTeamIn(r):-1, teamBots:team?(host&&Array.isArray(r.tb)?[clamp(r.tb[0]|0,0,4),clamp(r.tb[1]|0,0,4)]:[0,0]):null});
+  newRace({seed:r.seed|0,bots:0,d:clamp(r.d|0,0,2),nick:net.nm,color:net.col,online:true,
+    team, myTeam:team?myTeamIn(r):-1, teamBots:team?[0,0]:null});
   S.t=Math.max(-(COUNTDOWN+JOIN),Math.min(t0,COUNTDOWN));
   S.botsIn=(r.b|0)>0||(team&&Array.isArray(r.tb)&&((r.tb[0]|0)+(r.tb[1]|0))>0);   // ranking points only for races against online players only
   online=true; beginRun();
@@ -1400,7 +1424,7 @@ function drawBoatInner(b,z,mark){
   if(sk){ ctx.clip(); ctx.globalAlpha=0.22; hullPatternTop(ctx,L,B,sk); ctx.globalAlpha=1; }
   ctx.restore();
   { // floor, foredeck, mast thwart, side bags forward, stern bag, centre thwart + case, black V strap (like the photo)
-    ctx.save(); ctx.scale(0.8,0.86); ctx.translate(0,0.6); ctx.fillStyle='#c3c8cd'; hullPath(L,B); ctx.fill(); ctx.restore();
+    ctx.save(); ctx.scale(0.8,0.86); ctx.translate(0,0.6); ctx.fillStyle=(sk&&sk.floor)||'#c3c8cd'; hullPath(L,B); ctx.fill(); ctx.restore();
     const dk=sk?sk.deck:'#f4efe4'; ctx.fillStyle=dk; ctx.fillRect(-B*0.36,-L*0.5,B*0.72,L*0.06); ctx.fillRect(-B*0.4,-L*0.41,B*0.8,2.4);
     const gq=gearOf(b), bc=GEAR.b[gq.b].c; ctx.fillStyle=bc;
     for(const sg of [-1,1]){ ctx.beginPath(); ctx.ellipse(sg*B*0.29,-L*0.22,1.9,L*0.14,0,0,7); ctx.fill(); }
@@ -1707,8 +1731,8 @@ T3=window.T3=(function(){
     const nc=document.createElement('canvas'); nc.width=nc.height=128; const ng=nc.getContext('2d'), id=ng.createImageData(128,128);
     const hgt=(x,y)=>Math.sin(x*0.098)*0.5+Math.sin(y*0.147+x*0.049)*0.5+Math.sin((x+y)*0.196)*0.35+vnoise(x/9,y/9)*0.8;
     for(let y=0;y<128;y++) for(let x=0;x<128;x++){ const dx=hgt(x+1,y)-hgt(x-1,y), dy=hgt(x,y+1)-hgt(x,y-1), k=(y*128+x)*4; id.data[k]=128-dx*60; id.data[k+1]=128-dy*60; id.data[k+2]=255; id.data[k+3]=255; }
-    ng.putImageData(id,0,0); waterN=new THREE_.CanvasTexture(nc); waterN.wrapS=waterN.wrapT=THREE_.RepeatWrapping; waterN.repeat.set(220,220);
-    const water=new THREE_.Mesh(new THREE_.PlaneGeometry(14000,14000),new THREE_.MeshPhongMaterial({color:'#3f7591',specular:0x9fc6d8,shininess:70,normalMap:waterN,normalScale:new THREE_.Vector2(0.35,0.35)}));
+    ng.putImageData(id,0,0); waterN=new THREE_.CanvasTexture(nc); waterN.wrapS=waterN.wrapT=THREE_.RepeatWrapping; waterN.repeat.set(400,400);
+    const water=new THREE_.Mesh(new THREE_.PlaneGeometry(26000,26000),new THREE_.MeshPhongMaterial({color:'#3f7591',specular:0x9fc6d8,shininess:70,normalMap:waterN,normalScale:new THREE_.Vector2(0.35,0.35)}));
     water.rotation.x=-Math.PI/2; water.position.y=-0.6; water.receiveShadow=true; scene.add(water);
     // wave patch around the player: wave height follows the local wind (gusts = higher, darker, running with the wind)
     { const SZ=2600, SEG=120; const g=new THREE_.PlaneGeometry(SZ,SZ,SEG,SEG); g.rotateX(-Math.PI/2);
@@ -2316,7 +2340,7 @@ function frame(ts){
 
 // ---------- UI ----------
 function seg(id,key){$(id).addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;for(const x of $(id).children)x.setAttribute('aria-pressed',x===b);settings[key]=+b.dataset.v;});}
-seg('segN','n'); seg('segD','d'); seg('segB','b'); seg('segM','m'); seg('segOM','om');
+seg('segN','n'); seg('segD','d'); seg('segM','m'); seg('segOM','om');
 // wind arrow colours (green = right shift, red = left shift) can be switched off before the race; remembered on this device
 { let on=true; try{ on=localStorage.getItem('std-arrowcol')!=='0'; }catch(e){} window.OPTI_ARROWCOL=on;
   for(const x of $('segAC').children) x.setAttribute('aria-pressed',String((x.dataset.v==='1')===on));
