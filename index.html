@@ -43,6 +43,8 @@ input.txt{background:rgba(234,244,247,.08);color:var(--ink);border:1px solid rgb
 input.code{font-family:var(--f-mono);text-transform:uppercase;letter-spacing:.2em;flex:0 1 110px}
 button:focus-visible,input:focus-visible{outline:2px solid var(--mark);outline-offset:2px}
 hr{border:0;border-top:1px solid rgba(234,244,247,.14);margin:0;width:100%}
+.note:empty{display:none}
+.sec{font-family:var(--f-mono);font-size:13px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ink);margin:2px 0 0}
 .keys{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;font-size:13px;color:var(--ink-dim);margin:0}
 .keys dt{font-family:var(--f-mono);color:var(--ink)}
 .keys dd{margin:0}
@@ -104,9 +106,6 @@ select.txt{appearance:auto}
   #touch button.luff{height:30px;font-size:11px;padding:0 8px}
   #touch .acts{gap:4px}
   .card{padding:16px 14px;gap:10px}
-  .card>*{order:3}
-  .card>.wordmark,.card>.m-by{order:0}
-  .card>.quick{order:1}
   .card>.m-hide{display:none}
   .wordmark{font-size:34px}
   .seg button{padding:8px 9px;font-size:13px}
@@ -152,12 +151,9 @@ select.txt{appearance:auto}
     <h1 class="wordmark">Optimal<br><span>Regatta</span></h1>
     <p class="tag m-by fit-drop" data-p="11">developed by Train to Dominate · Florian Stindt</p>
     <p class="lead m-hide fit-drop" data-p="2">Beat to mark 1, play the shifts and gusts, follow the racing rules and be first across the finish line.</p>
-    <div class="row no-web fit-drop" data-p="10"><span class="lbl">Your boat</span><canvas id="skinPrev" aria-label="3D preview of your boat" hidden></canvas><canvas id="skinPrev2" aria-label="Preview of your boat"></canvas></div>
-    <div class="row no-web fit-drop" data-p="9" id="pvCtl" hidden style="justify-content:center;gap:10px"><button class="ghost" id="pvL" type="button" aria-label="Steer to port" style="min-width:56px;font-size:22px">−</button><button class="ghost" id="pvR" type="button" aria-label="Steer to starboard" style="min-width:56px;font-size:22px">+</button></div>
-    <p class="tag no-web fit-drop" data-p="5" id="pvHint" hidden>Hold − or + to steer the boat (or swipe on the water)</p>
-    <div class="row no-web" style="justify-content:space-between"><span id="skinName" style="font-weight:600"></span><button class="ghost online-only" id="bShop" type="button">Shop · Designs</button></div>
-    <p class="tag online-only" id="skinNote"></p>
-    <div class="row online-only"><span class="lbl">Online with friends</span>
+    <h2 class="sec online-only">Online race</h2>
+    <p class="tag online-only" id="onlineCount" aria-live="polite" hidden><span style="color:#3ad07a">●</span> <b id="onlineN">1</b> <span id="onlineTxt">player online</span></p>
+    <div class="row online-only"><span class="lbl">Your name</span>
       <input class="txt" id="nick" maxlength="14" placeholder="Your name" autocomplete="off">
     </div>
     <div class="row online-only" id="onlineRow">
@@ -166,9 +162,9 @@ select.txt{appearance:auto}
       <button class="ghost" id="bJoin" type="button">Join</button>
     </div>
     <div class="row online-only"><button class="ghost" id="bQuick" type="button">Find random opponents</button></div>
-    
     <p class="note online-only" id="onlineNote"></p>
-    <hr class="no-web">
+    <hr class="online-only">
+    <h2 class="sec">Offline practice</h2>
     <div class="row quick"><span class="lbl">Mode</span>
       <div class="seg" id="segM"><button type="button" data-v="0" aria-pressed="true">Fleet Race</button><button type="button" data-v="1">Team Race 4:4</button></div>
     </div>
@@ -181,8 +177,15 @@ select.txt{appearance:auto}
       <div class="seg" id="segAC"><button type="button" data-v="1" aria-pressed="true">Coloured by shifts</button><button type="button" data-v="0">White only</button></div>
     </div>
 
-    <button class="go quick" id="bStart" type="button">Start practice</button>
-    <a class="go quick" id="bFull" href="#" target="_blank" rel="noopener" hidden style="text-align:center;text-decoration:none">Start practice in full screen ⤢</a>
+    <button class="go quick" id="bStart" type="button">Start race</button>
+    <a class="go quick" id="bFull" href="#" target="_blank" rel="noopener" hidden style="text-align:center;text-decoration:none">Start race in full screen ⤢</a>
+    <hr class="no-web">
+    <h2 class="sec no-web">Shop</h2>
+    <div class="row no-web fit-drop" data-p="10"><span class="lbl">Your boat</span><canvas id="skinPrev" aria-label="3D preview of your boat" hidden></canvas><canvas id="skinPrev2" aria-label="Preview of your boat"></canvas></div>
+    <div class="row no-web fit-drop" data-p="9" id="pvCtl" hidden style="justify-content:center;gap:10px"><button class="ghost" id="pvL" type="button" aria-label="Steer to port" style="min-width:56px;font-size:22px">−</button><button class="ghost" id="pvR" type="button" aria-label="Steer to starboard" style="min-width:56px;font-size:22px">+</button></div>
+    <p class="tag no-web fit-drop" data-p="5" id="pvHint" hidden>Hold − or + to steer the boat (or swipe on the water)</p>
+    <div class="row no-web" style="justify-content:space-between"><span id="skinName" style="font-weight:600"></span><button class="ghost online-only" id="bShop" type="button">Shop · Designs</button></div>
+    <p class="tag online-only" id="skinNote"></p>
     <div class="row fit-drop" data-p="7"><button class="ghost" id="bRules" type="button">Racing rules</button><button class="ghost online-only" id="bRank" type="button">Rankings</button></div>
     <dl class="keys m-hide fit-drop" data-p="1">
       <dt>← → / A D</dt><dd>Steer</dd>
@@ -1104,8 +1107,11 @@ $('onlineNote').textContent='Connecting …';
   try{ room=!WEBONLY&&window.claude&&window.claude.use?await window.claude.use('room'):null; }catch(e){ room=null; }
   $('onlineNote').textContent=room?'':'Online mode only works when the app is opened on claude.ai.';
   $('bCreate').disabled=$('bJoin').disabled=$('bQuick').disabled=!room;
-  if(room) room.onPeers(onLobbyPeers,()=>{});
+  if(room){ room.onPeers(onLobbyPeers,()=>{}); showOnline(); setInterval(showOnline,5000); }
 })();
+// how many players are online right now (everyone who has the game open; several tabs of one player count once)
+function showOnline(){ if(!room) return; let n=1; try{ const ps=room.peers().filter(p=>p.kind!=='agent'); n=Math.max(1,new Set(ps.map(p=>p.by||p.peer)).size); }catch(e){}
+  $('onlineN').textContent=n; $('onlineTxt').textContent=n===1?'player online (you)':'players online'; $('onlineCount').hidden=false; }
 // ---- random matchmaking: everyone looking for a race sets {q} in the shared lobby;
 // the one who has waited longest opens a room, the others join it.
 let queuing=false;
@@ -1117,6 +1123,7 @@ function quickSearch(){
   onLobbyPeers();
 }
 function onLobbyPeers(){
+  showOnline();
   if(!room||!queuing||net) return;
   const qs=room.peers().filter(p=>p.presence&&typeof p.presence.q==='number').sort((a,b)=>(a.presence.q-b.presence.q)||(a.peer<b.peer?-1:1));
   if(!qs.length) return;
@@ -1666,7 +1673,7 @@ $('bDelYes').onclick=async()=>{ const n=$('rankNote'); $('delConfirm').hidden=tr
     mySailNo=null; myTotal=0; friends={ids:[],names:{}}; rankPlayers=rankPlayers.filter(p=>p.id!==myUid);
     try{ snShow(); renderGear(); renderFlags(); }catch(e){} renderRanks();
     n.textContent='Done: all your data has been deleted. If you play online again, a new anonymous player ID is created.';
-  }catch(e){ n.textContent='Could not delete everything ('+(e&&e.message||e)+'). Please check your connection or write to fl.stindt@gmail.com.'; }
+  }catch(e){ n.textContent='Could not delete everything ('+(e&&e.message||e)+'). Please check your connection or write to flo.laser197183@gmail.com.'; }
 };
 document.addEventListener('click',e=>{ const b=e.target.closest('.addf'); if(!b) return; addFriend(b.dataset.uid,b.dataset.nick); b.textContent='Friend ✓'; b.disabled=true; });
 
